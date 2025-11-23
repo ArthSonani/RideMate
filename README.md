@@ -1,3 +1,8 @@
+## Modern Cab Sharing Platform
+
+A real-time cab-sharing web platform where users can create rides, search for future rides, view dynamic routes on a map, and join shared rides with live seat updates and notifications.
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
