@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Road Route Selector</title>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* Map Section */
+    #map {
+      width: 65%;
+      height: 100%;
+    }
+
+    /* Routes Section */
+    .routes {
+      width: 35%;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: #f5f5f5;
+      overflow-y: auto;
+    }
+
+    .routes h2 {
+      margin-bottom: 20px;
+    }
+
+    .route {
+      padding: 15px;
+      margin-bottom: 12px;
+      background-color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      transition: background 0.2s ease;
+    }
+
+    .route:hover {
+      background-color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Left: Google Map -->
+  <div id="map"></div>
+
+  <!-- Right: Route Options -->
+  <div class="routes">
+    <h2>Select Route (Road Only)</h2>
+
+    <div class="route" onclick="showRoute('sobha dream heights', 'the atlantis, surat')">
+      🚗 Sobha Dream Heights → The Atlantis
+    </div>
+
+    <div class="route" onclick="showRoute('Ahmedabad', 'Vadodara')">
+      🚗 Ahmedabad → Vadodara
+    </div>
+
+    <div class="route" onclick="showRoute('Delhi', 'Jaipur')">
+      🚗 Delhi → Jaipur
+    </div>
+
+    <div class="route" onclick="showRoute('Pune', 'Goa')">
+      🚗 Pune → Goa
+    </div>
+
+    <div class="route" onclick="showRoute('Bangalore', 'Chennai')">
+      🚗 Bangalore → Chennai
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let map;
+  let directionsService;
+  let directionsRenderer;
+
+  function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 21.1702, lng: 72.8311 }, // Surat
+      zoom: 7,
+    });
+
+    directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+  }
+
+  function showRoute(origin, destination) {
+    directionsService.route(
+        {
+        origin: origin,
+        destination: destination,
+        travelMode: google.maps.TravelMode.DRIVING,
+        },
+        function (result, status) {
+        console.log("Directions status:", status);
+
+        if (status === "OK") {
+            directionsRenderer.setDirections(result);
+        } else {
+            alert("Route error: " + status);
+        }
+        }
+    );
+}
+
+</script>
+
+<!-- Google Maps Script -->
+<script
+  async
+  defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDL3qJCkXJu3bY9wBotfb02ONiMo5HY-KU&callback=initMap">
+</script>
+
+</body>
+</html>
