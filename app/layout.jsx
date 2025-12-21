@@ -1,5 +1,4 @@
 import '@styles/globals.css'
-import { Children } from 'react'
 
 export const metadata = {
   title: 'RideMate',
