@@ -5,13 +5,16 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
 const Register = () => {
+  
   const router = useRouter()
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     phone: ''
   })
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
