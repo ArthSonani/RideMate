@@ -2,7 +2,6 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 const Dashboard = () => {
   const { data: session, status } = useSession();
@@ -23,7 +22,6 @@ const Dashboard = () => {
         const data = await response.json();
         setUser(data);
 
-        console.log("User data from /api/dashboard:", data);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
