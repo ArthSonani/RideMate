@@ -13,9 +13,9 @@ const Home = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Image
-                src="/ridemate4.png"
+                src="/ridemate1.png"
                 width={140}
-                height={70}
+                height={60}
                 alt="logo"
               />
             </div>

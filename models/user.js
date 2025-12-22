@@ -46,14 +46,14 @@ const UserSchema = new Schema({
 
     createdRides: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Ride",
       },
     ],
 
     joinedRides: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: "Ride",
       },
     ],

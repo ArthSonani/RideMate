@@ -28,12 +28,12 @@ export default function LoginPage() {
     if (res?.error) {
       setError("Invalid email or password");
     } else {
-      router.push("/"); // redirect after login
+      router.push("/dashboard");
     }
   };
 
   const handleGoogleLogin = async () => {
-    await signIn("google", { callbackUrl: "/" });
+    await signIn("google", { callbackUrl: "/dashboard" });
   };
 
   return (

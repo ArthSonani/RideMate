@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { signIn } from 'next-auth/react'
 
 const Register = () => {
   
@@ -31,7 +32,7 @@ const Register = () => {
     setError('')
 
     try {
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +43,20 @@ const Register = () => {
       const data = await response.json()
 
       if (response.ok) {
-        router.push('/dashboard')
+        // Auto-login right after successful registration using credentials provider
+        const loginRes = await signIn('credentials', {
+          email: formData.email,
+          password: formData.password,
+          redirect: false,
+        })
+
+        if (loginRes?.error) {
+          // Fallback: send user to login page if auto-login fails
+          setError('Account created, please login to continue.')
+          router.push('/login')
+        } else {
+          router.push('/dashboard')
+        }
       } else {
         setError(data.message || 'Registration failed')
       }
