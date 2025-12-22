@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const isConnected = false;
+let isConnected = false;
 
 export const connectToDB = async () => {
 
@@ -13,9 +13,7 @@ export const connectToDB = async () => {
 
     try {
         await mongoose.connect(process.env.MONGODB_URI, {
-            dbName: 'ridemate',
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+            dbName: 'ridemate'
         });
 
         isConnected = true;
