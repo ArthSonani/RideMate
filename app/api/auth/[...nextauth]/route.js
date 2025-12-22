@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { connectToDB } from "@/utils/database";
 import User from "@/models/user";
 
-const handler = NextAuth({
+const authOptions = NextAuth({
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -28,9 +28,8 @@ const handler = NextAuth({
 
                 if(!isPasswordCorrect) throw new Error("Incorrect password");
 
-                // Return a safe object
+                // Return minimal session fields
                 return {
-                    id: user._id.toString(),
                     name: user.name,
                     email: user.email,
                     image: user.avatar || null,
@@ -43,19 +42,14 @@ const handler = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
     ],
-    session: {
-        strategy: "jwt",
-    },
-    
-
     callbacks: {
         async signIn({ user, account }){
             await connectToDB();
 
             if(account.provider === "google") {
-                const userExists = await User.findOne({ email: user.email });
+                const dbUser = await User.findOne({ email: user.email });
 
-                if(!userExists) {
+                if(!dbUser) {
                     await User.create({
                         name: user.name,
                         email: user.email,
@@ -67,34 +61,8 @@ const handler = NextAuth({
 
             return true;
         },
-
-        async jwt({ token, user }) {
-            if (user) {
-                token.id = user.id || token.id;
-                token.picture = user.image || token.picture || null;
-            }
-
-            if (!token.id && token.email) {
-                await connectToDB();
-                const dbUser = await User.findOne({ email: token.email });
-                if (dbUser) {
-                    token.id = dbUser._id.toString();
-                    token.picture = dbUser.avatar || token.picture || null;
-                }
-            }
-
-            return token;
-        },
-
-        async session({ session, token }) {
-            if (session?.user) {
-                session.user.id = token.id;
-                session.user.image = session.user.image || token.picture || null;
-            }
-            return session;
-        },
     },
 
 });
 
-export { handler as GET, handler as POST };
+export { authOptions as GET, authOptions as POST };

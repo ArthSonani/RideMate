@@ -5,7 +5,7 @@ import User from "@/models/user";
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
 
     if (!session || !session.user?.email) {
       return NextResponse.json(
@@ -17,15 +17,7 @@ export async function GET() {
     await connectToDB();
 
     const user = await User.findOne(
-      { email: session.user.email },
-      {
-        name: 1,
-        email: 1,
-        image: 1,
-        phone: 1,
-        role: 1,
-        createdAt: 1,
-      }
+      { email: session.user.email }
     );
 
     if (!user) {
