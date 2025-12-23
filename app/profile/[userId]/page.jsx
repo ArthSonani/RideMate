@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { notFound, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -31,14 +31,49 @@ function RideItem({ ride }) {
 }
 
 export default function UserProfilePage() {
-    const { userId } = useParams();
-    if (!userId) notFound();
-    const [user, setUser] = useState(null);
+  const { userId } = useParams();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    useEffect(async () => {
-        const user = await getUser(userId);
-        setUser(user);
-    }, []);
+  useEffect(() => {
+    let active = true;
+    async function load() {
+      try {
+        setError("");
+        setLoading(true);
+        if (!userId) return;
+        const data = await getUser(userId);
+        if (active) setUser(data);
+      } catch (e) {
+        if (active) setError(e?.message || "Failed to load user");
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      active = false;
+    };
+  }, [userId]);
+
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-8">Loading profile...</div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-8 text-red-600">{error}</div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="mx-auto max-w-3xl px-4 py-8">User not found</div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
