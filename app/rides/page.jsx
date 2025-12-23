@@ -152,18 +152,11 @@ export default function BrowseRidesPage() {
 							name="sourceAddress"
 							value={filters.sourceAddress}
 							onChange={onChange}
+							onBlur={() => geocode("source")}
 							className="mt-1 w-full rounded border px-3 py-2"
 							placeholder="Pickup address"
 						/>
 						<div className="mt-2 flex items-center gap-2">
-							<button
-								type="button"
-								onClick={() => geocode("source")}
-								className="rounded bg-gray-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
-								disabled={geoLoading.source}
-							>
-								{geoLoading.source ? "Filling..." : "Fill coordinates"}
-							</button>
 							<input
 								name="sourceRadiusKm"
 								type="number"
@@ -173,6 +166,9 @@ export default function BrowseRidesPage() {
 								className="w-28 rounded border px-2 py-1 text-sm"
 								title="Radius (km)"
 							/>
+							{geoLoading.source && (
+								<span className="text-xs text-gray-500">Filling...</span>
+							)}
 							{geoError.source && (
 								<span className="text-xs text-red-600">{geoError.source}</span>
 							)}
@@ -189,18 +185,11 @@ export default function BrowseRidesPage() {
 							name="destinationAddress"
 							value={filters.destinationAddress}
 							onChange={onChange}
+							onBlur={() => geocode("destination")}
 							className="mt-1 w-full rounded border px-3 py-2"
 							placeholder="Dropoff address"
 						/>
 						<div className="mt-2 flex items-center gap-2">
-							<button
-								type="button"
-								onClick={() => geocode("destination")}
-								className="rounded bg-gray-900 px-3 py-1.5 text-sm text-white disabled:opacity-50"
-								disabled={geoLoading.destination}
-							>
-								{geoLoading.destination ? "Filling..." : "Fill coordinates"}
-							</button>
 							<input
 								name="destRadiusKm"
 								type="number"
@@ -210,6 +199,9 @@ export default function BrowseRidesPage() {
 								className="w-28 rounded border px-2 py-1 text-sm"
 								title="Radius (km)"
 							/>
+							{geoLoading.destination && (
+								<span className="text-xs text-gray-500">Filling...</span>
+							)}
 							{geoError.destination && (
 								<span className="text-xs text-red-600">{geoError.destination}</span>
 							)}

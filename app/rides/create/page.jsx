@@ -152,23 +152,17 @@ const CreateRide = () => {
                 name="sourceAddress"
                 value={form.sourceAddress}
                 onChange={update}
+                onBlur={() => geocode("source")}
                 className="mt-1 w-full border rounded px-3 py-2"
                 placeholder="Pickup address"
                 required
               />
-              <div className="mt-2 flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => geocode("source")}
-                  className="px-3 py-1.5 rounded bg-gray-900 text-white text-sm disabled:opacity-50"
-                  disabled={geoLoading.source}
-                >
-                  {geoLoading.source ? "Filling..." : "Fill coordinates"}
-                </button>
-                {geoError.source && (
-                  <span className="text-xs text-red-600">{geoError.source}</span>
-                )}
-              </div>
+              {geoLoading.source && (
+                <div className="mt-2 text-xs text-gray-500">Filling coordinates...</div>
+              )}
+              {geoError.source && (
+                <div className="mt-2 text-xs text-red-600">{geoError.source}</div>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Destination Address</label>
@@ -176,23 +170,17 @@ const CreateRide = () => {
                 name="destinationAddress"
                 value={form.destinationAddress}
                 onChange={update}
+                onBlur={() => geocode("destination")}
                 className="mt-1 w-full border rounded px-3 py-2"
                 placeholder="Dropoff address"
                 required
               />
-              <div className="mt-2 flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => geocode("destination")}
-                  className="px-3 py-1.5 rounded bg-gray-900 text-white text-sm disabled:opacity-50"
-                  disabled={geoLoading.destination}
-                >
-                  {geoLoading.destination ? "Filling..." : "Fill coordinates"}
-                </button>
-                {geoError.destination && (
-                  <span className="text-xs text-red-600">{geoError.destination}</span>
-                )}
-              </div>
+              {geoLoading.destination && (
+                <div className="mt-2 text-xs text-gray-500">Filling coordinates...</div>
+              )}
+              {geoError.destination && (
+                <div className="mt-2 text-xs text-red-600">{geoError.destination}</div>
+              )}
             </div>
           </div>
 
