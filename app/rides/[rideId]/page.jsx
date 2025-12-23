@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 
 function formatDate(dt) {
@@ -20,9 +21,13 @@ function formatDate(dt) {
 
 export default function RideDetails() {
   const { rideId } = useParams();
+  const { data: session } = useSession();
   const [ride, setRide] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [reqLoading, setReqLoading] = useState(false);
+  const [reqError, setReqError] = useState("");
+  const [reqSuccess, setReqSuccess] = useState("");
 
   useEffect(() => {
     if (!rideId) return;
@@ -76,6 +81,38 @@ export default function RideDetails() {
 
   const passengerCount = ride.passengers?.length || 0;
   const filledSeats = ride.totalSeats - ride.availableSeats;
+
+  const email = session?.user?.email;
+  const canRequest = Boolean(
+    email &&
+    ride.createdBy?.email !== email &&
+    !(ride.passengers || []).some((p) => p.email === email) &&
+    !(ride.requests || []).some((r) => r.email === email) &&
+    ["scheduled", "ongoing"].includes(ride.status) &&
+    (ride.availableSeats ?? 0) > 0
+  );
+
+  async function sendRequest() {
+    try {
+      setReqError("");
+      setReqSuccess("");
+      setReqLoading(true);
+      const res = await fetch(`/api/rides/${rideId}/requests`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Failed to request");
+      setReqSuccess("Request submitted");
+      // Refresh ride details to reflect new request
+      const fresh = await fetch(`/api/rides/${rideId}`, { cache: "no-store" });
+      if (fresh.ok) {
+        const d = await fresh.json();
+        setRide({ ...d, date: d?.date ? new Date(d.date) : null });
+      }
+    } catch (e) {
+      setReqError(e.message || "Failed to request");
+    } finally {
+      setReqLoading(false);
+    }
+  }
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
@@ -157,6 +194,25 @@ export default function RideDetails() {
           ) : (
             <div className="mt-3 text-sm text-gray-500">Unknown</div>
           )}
+          <div className="mt-4">
+            {session ? (
+              canRequest ? (
+                <button
+                  disabled={reqLoading}
+                  onClick={sendRequest}
+                  className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+                >
+                  {reqLoading ? "Requesting..." : "Request to Join"}
+                </button>
+              ) : (
+                <span className="text-xs text-gray-500">You cannot request this ride.</span>
+              )
+            ) : (
+              <span className="text-xs text-gray-500">Sign in to request.</span>
+            )}
+            {reqError && <div className="mt-2 text-xs text-red-600">{reqError}</div>}
+            {reqSuccess && <div className="mt-2 text-xs text-green-600">{reqSuccess}</div>}
+          </div>
         </section>
 
         <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
@@ -176,6 +232,20 @@ export default function RideDetails() {
             ))}
           </ul>
         </section>
+
+        {Array.isArray(ride.requests) && ride.requests.length > 0 && (
+          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+            <h2 className="text-lg font-medium">Requests</h2>
+            <ul className="mt-3 space-y-2 text-sm">
+              {ride.requests.map((r, idx) => (
+                <li key={idx} className="flex items-center justify-between">
+                  <span className="font-medium">{r.name}</span>
+                  <span className="text-gray-500">{r.email}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </div>
   );

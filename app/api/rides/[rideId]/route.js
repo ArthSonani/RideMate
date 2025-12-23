@@ -13,6 +13,7 @@ export async function GET(_req, context) {
 		const ride = await Ride.findById(rideId)
 			.populate({ path: "createdBy", model: User, select: "name email avatar" })
 			.populate({ path: "passengers.user", model: User, select: "name email avatar" })
+			.populate({ path: "requests.user", model: User, select: "name email avatar" })
 			.lean();
 
             
@@ -44,6 +45,15 @@ export async function GET(_req, context) {
 						email: p?.user?.email || "unknownuser@gmail.com",
                         avatar: p?.user?.avatar || null,
 					}))
+				: [],
+
+			requests: Array.isArray(ride.requests)
+				? ride.requests.map((rq) => ({
+					name: rq?.user?.name || "Unknown User",
+					email: rq?.user?.email || "",
+					avatar: rq?.user?.avatar || null,
+					requestedAt: rq?.requestedAt,
+				}))
 				: [],
 
 			status: ride.status,
