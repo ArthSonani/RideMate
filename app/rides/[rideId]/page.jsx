@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import Script from "next/script";
+import GoogleDirectionsMap from "@/components/GoogleDirectionsMap";
 
 function formatDate(dt) {
   try {
@@ -20,98 +20,7 @@ function formatDate(dt) {
   }
 }
 
-function MapThumb({ source, destination }) {
-  if (!source?.lat || !source?.lng || !destination?.lat || !destination?.lng) return null;
-
-  const midLat = (Number(source.lat) + Number(destination.lat)) / 2;
-  const midLng = (Number(source.lng) + Number(destination.lng)) / 2;
-  const size = "360x200"; // small map
-  const zoom = 11;
-  const markers = `${source.lat},${source.lng},lightblue1|${destination.lat},${destination.lng},red`; // basic markers
-  const url = `https://staticmap.openstreetmap.de/staticmap.php?center=${midLat},${midLng}&zoom=${zoom}&size=${size}&markers=${encodeURIComponent(markers)}`;
-
-  return (
-    <img
-      src={url}
-      alt="Route map"
-      className="h-[200px] w-full rounded-lg object-cover"
-      loading="lazy"
-    />
-  );
-}
-
-function GoogleRouteMap({ source, destination }) {
-  const mapRef = useRef(null);
-  const directionsRef = useRef({ service: null, renderer: null, map: null });
-  const [gmapsLoaded, setGmapsLoaded] = useState(false);
-
-  const apiKey = process.env.GOOGLE_MAP_API_KEY;
-  const validCoords =
-    source?.lat && source?.lng && destination?.lat && destination?.lng;
-
-  useEffect(() => {
-    if (!gmapsLoaded || !validCoords || !mapRef.current) return;
-    const g = window.google;
-    try {
-      const center = {
-        lat: (Number(source.lat) + Number(destination.lat)) / 2,
-        lng: (Number(source.lng) + Number(destination.lng)) / 2,
-      };
-      const map = new g.maps.Map(mapRef.current, {
-        center,
-        zoom: 10,
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: false,
-      });
-      const service = new g.maps.DirectionsService();
-      const renderer = new g.maps.DirectionsRenderer({ suppressMarkers: false });
-      renderer.setMap(map);
-
-      service.route(
-        {
-          origin: { lat: Number(source.lat), lng: Number(source.lng) },
-          destination: { lat: Number(destination.lat), lng: Number(destination.lng) },
-          travelMode: g.maps.TravelMode.DRIVING,
-        },
-        (result, status) => {
-          if (status === "OK") {
-            renderer.setDirections(result);
-          } else {
-            // Fallback: place simple markers if directions fail
-            new g.maps.Marker({ position: { lat: Number(source.lat), lng: Number(source.lng) }, map });
-            new g.maps.Marker({ position: { lat: Number(destination.lat), lng: Number(destination.lng) }, map });
-            const bounds = new g.maps.LatLngBounds();
-            bounds.extend({ lat: Number(source.lat), lng: Number(source.lng) });
-            bounds.extend({ lat: Number(destination.lat), lng: Number(destination.lng) });
-            map.fitBounds(bounds);
-          }
-        }
-      );
-
-      directionsRef.current = { service, renderer, map };
-    } catch (_) {
-      // noop — if Google script not available
-    }
-    // no cleanup of renderer here; component is short-lived per page
-  }, [gmapsLoaded, validCoords, source?.lat, source?.lng, destination?.lat, destination?.lng]);
-
-  // Without API key, render static thumbnail as graceful fallback
-  if (!apiKey) {
-    return <MapThumb source={source} destination={destination} />;
-  }
-
-  return (
-    <>
-      <div ref={mapRef} className="h-[200px] w-full rounded-lg" />
-      <Script
-        src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}`}
-        strategy="lazyOnload"
-        onLoad={() => setGmapsLoaded(true)}
-      />
-    </>
-  );
-}
+// Map rendering is delegated to the reusable component in components/GoogleDirectionsMap.jsx
 
 export default function RideDetails() {
   const { rideId } = useParams();
@@ -243,7 +152,12 @@ export default function RideDetails() {
         <section className="rounded-lg border border-gray-300 bg-white p-5 shadow-sm">
           <div className="grid gap-5 md:grid-cols-5">
             <div className="md:col-span-2">
-              <GoogleRouteMap source={ride.source} destination={ride.destination} />
+              <GoogleDirectionsMap
+                origin={ride.source?.address}
+                destination={ride.destination?.address}
+                className="w-full rounded-lg"
+                height={300}
+              />
             </div>
             <div className="md:col-span-3">
               <div className="flex items-start justify-between gap-4">

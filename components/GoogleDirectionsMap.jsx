@@ -27,7 +27,8 @@ export default function GoogleDirectionsMap({
   const directionsRef = useRef({ service: null, renderer: null, map: null });
   const [gmapsLoaded, setGmapsLoaded] = useState(false);
 
-  const apiKey = process.env.GOOGLE_MAP_API_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
   const hasAddresses = Boolean(origin && destination);
 
   useEffect(() => {
