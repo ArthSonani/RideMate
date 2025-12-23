@@ -68,6 +68,20 @@ const rideSchema = new mongoose.Schema(
       },
     ],
 
+    // Incoming join requests awaiting driver action
+    requests: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+        requestedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
+
     status: {
       type: String,
       enum: ["scheduled", "ongoing", "completed", "cancelled"],
