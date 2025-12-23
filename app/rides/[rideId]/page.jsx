@@ -19,6 +19,26 @@ function formatDate(dt) {
   }
 }
 
+function MapThumb({ source, destination }) {
+  if (!source?.lat || !source?.lng || !destination?.lat || !destination?.lng) return null;
+
+  const midLat = (Number(source.lat) + Number(destination.lat)) / 2;
+  const midLng = (Number(source.lng) + Number(destination.lng)) / 2;
+  const size = "360x200"; // small map
+  const zoom = 11;
+  const markers = `${source.lat},${source.lng},lightblue1|${destination.lat},${destination.lng},red`; // basic markers
+  const url = `https://staticmap.openstreetmap.de/staticmap.php?center=${midLat},${midLng}&zoom=${zoom}&size=${size}&markers=${encodeURIComponent(markers)}`;
+
+  return (
+    <img
+      src={url}
+      alt="Route map"
+      className="h-[200px] w-full rounded-lg object-cover"
+      loading="lazy"
+    />
+  );
+}
+
 export default function RideDetails() {
   const { rideId } = useParams();
   const { data: session } = useSession();
@@ -81,6 +101,29 @@ export default function RideDetails() {
 
   const passengerCount = ride.passengers?.length || 0;
   const filledSeats = ride.totalSeats - ride.availableSeats;
+  const hasSeats = (ride.availableSeats ?? 0) > 0;
+  const statusStyle =
+    ride.status === "scheduled"
+      ? "bg-green-100 text-green-700"
+      : ride.status === "completed"
+      ? "bg-red-100 text-red-700"
+      : ride.status === "ongoing"
+      ? "bg-indigo-100 text-indigo-700"
+      : "bg-gray-100 text-gray-700";
+
+  const dateStr = ride.date
+    ? new Intl.DateTimeFormat("en-US", {
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+      }).format(ride.date)
+    : "-";
+  const timeStr = ride.date
+    ? new Intl.DateTimeFormat("en-US", { hour: "2-digit", minute: "2-digit" }).format(
+        ride.date
+      )
+    : "-";
 
   const email = session?.user?.email;
   const canRequest = Boolean(
@@ -89,7 +132,7 @@ export default function RideDetails() {
     !(ride.passengers || []).some((p) => p.email === email) &&
     !(ride.requests || []).some((r) => r.email === email) &&
     ["scheduled", "ongoing"].includes(ride.status) &&
-    (ride.availableSeats ?? 0) > 0
+    hasSeats
   );
 
   async function sendRequest() {
@@ -115,7 +158,7 @@ export default function RideDetails() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="mb-6">
         <h1 className="text-2xl font-semibold tracking-tight">Ride Details</h1>
         <p className="text-sm text-gray-500">ID: {ride.id}</p>
@@ -123,40 +166,49 @@ export default function RideDetails() {
 
       <div className="grid gap-6">
         <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-lg font-medium">Route</h2>
-              <div className="mt-3 space-y-2 text-sm">
-                <div>
-                  <span className="font-semibold">From:</span>{" "}
-                  <span>{ride.source?.address}</span>
-                </div>
-                <div className="text-xs text-gray-500">
-                  Lat: {ride.source?.lat}, Lng: {ride.source?.lng}
-                </div>
-                <div className="mt-2">
-                  <span className="font-semibold">To:</span>{" "}
-                  <span>{ride.destination?.address}</span>
-                </div>
-                <div className="text-xs text-gray-500">
-                  Lat: {ride.destination?.lat}, Lng: {ride.destination?.lng}
-                </div>
-              </div>
+          <div className="grid gap-5 md:grid-cols-5">
+            <div className="md:col-span-2">
+              <MapThumb source={ride.source} destination={ride.destination} />
             </div>
-            <div className="text-right">
-              <div className="text-sm">
-                <span className="font-semibold">Date:</span>{" "}
-                {ride.date ? formatDate(ride.date) : "-"}
-              </div>
-              <div className="text-sm mt-1">
-                <span className="font-semibold">Vehicle:</span>{" "}
-                {ride.vehicleType}
-              </div>
-              <div className="text-sm mt-1">
-                <span className="font-semibold">Status:</span>{" "}
-                <span className="inline-block rounded-full bg-gray-100 px-2 py-0.5 text-xs capitalize">
-                  {ride.status}
-                </span>
+            <div className="md:col-span-3">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h2 className="text-lg font-medium">Route</h2>
+                  <div className="mt-3 space-y-2 text-sm">
+                    <div>
+                      <span className="font-semibold">From:</span>{" "}
+                      <span>{ride.source?.address}</span>
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Lat: {ride.source?.lat}, Lng: {ride.source?.lng}
+                    </div>
+                    <div className="mt-2">
+                      <span className="font-semibold">To:</span>{" "}
+                      <span>{ride.destination?.address}</span>
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Lat: {ride.destination?.lat}, Lng: {ride.destination?.lng}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm">
+                    <span className="font-semibold">Date:</span> {dateStr}
+                  </div>
+                  <div className="text-sm mt-1">
+                    <span className="font-semibold">Time:</span> {timeStr}
+                  </div>
+                  <div className="text-sm mt-1">
+                    <span className="font-semibold">Vehicle:</span>{" "}
+                    {ride.vehicleType}
+                  </div>
+                  <div className="text-sm mt-1">
+                    <span className="font-semibold">Status:</span>{" "}
+                    <span className={`inline-block rounded-full px-2 py-0.5 text-xs capitalize ${statusStyle}`}>
+                      {ride.status}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -175,7 +227,9 @@ export default function RideDetails() {
             </div>
             <div>
               <div className="text-gray-500">Available</div>
-              <div className="font-semibold">{ride.availableSeats}</div>
+              <div className={`font-semibold ${hasSeats ? "text-green-600" : "text-red-600"}`}>
+                {ride.availableSeats}
+              </div>
             </div>
             <div>
               <div className="text-gray-500">Price per seat</div>
@@ -185,16 +239,48 @@ export default function RideDetails() {
         </section>
 
         <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-medium">Driver</h2>
-          {ride.createdBy ? (
-            <div className="mt-3 text-sm">
-              <div className="font-semibold">{ride.createdBy.name}</div>
-              <div className="text-gray-500">{ride.createdBy.email}</div>
-            </div>
-          ) : (
-            <div className="mt-3 text-sm text-gray-500">Unknown</div>
-          )}
-          <div className="mt-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-medium">Owner & Passengers</h2>
+            <span className="text-sm text-gray-500">{passengerCount} joined</span>
+          </div>
+
+          {/* Owner */}
+          <div className="mt-3">
+            <div className="text-xs uppercase tracking-wide text-gray-500">Owner</div>
+            {ride.createdBy ? (
+              <div className="mt-2 flex items-center gap-3">
+                <img src={ride.createdBy.avatar || "/ridemate2.png"} alt="Owner avatar" className="h-10 w-10 rounded-full" />
+                <div className="text-sm">
+                  <div className="font-medium">{ride.createdBy.name}</div>
+                  <div className="text-gray-500">{ride.createdBy.email}</div>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-2 text-sm text-gray-500">Unknown</div>
+            )}
+          </div>
+
+          {/* Passengers */}
+          <div className="mt-5">
+            <div className="text-xs uppercase tracking-wide text-gray-500">Passengers</div>
+            <ul className="mt-2 space-y-2 text-sm">
+              {passengerCount === 0 && (
+                <li className="text-gray-500">No passengers yet.</li>
+              )}
+              {ride.passengers.map((p, idx) => (
+                <li key={idx} className="flex items-center gap-3">
+                  <img src={p.avatar || "/ridemate2.png"} alt="" className="h-8 w-8 rounded-full" />
+                  <div>
+                    <div className="font-medium">{p.name}</div>
+                    <div className="text-gray-500">{p.email}</div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Join button */}
+          <div className="mt-5">
             {session ? (
               canRequest ? (
                 <button
@@ -215,31 +301,16 @@ export default function RideDetails() {
           </div>
         </section>
 
-        <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-medium">Passengers</h2>
-            <span className="text-sm text-gray-500">{passengerCount} joined</span>
-          </div>
-          <ul className="mt-3 space-y-2 text-sm">
-            {passengerCount === 0 && (
-              <li className="text-gray-500">No passengers yet.</li>
-            )}
-            {ride.passengers.map((p, idx) => (
-              <li key={idx} className="flex items-center justify-between">
-                <span className="font-medium">{p.name}</span>
-                <span className="text-gray-500">{p.email}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-
         {Array.isArray(ride.requests) && ride.requests.length > 0 && (
           <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
             <h2 className="text-lg font-medium">Requests</h2>
             <ul className="mt-3 space-y-2 text-sm">
               {ride.requests.map((r, idx) => (
                 <li key={idx} className="flex items-center justify-between">
-                  <span className="font-medium">{r.name}</span>
+                  <div className="flex items-center gap-3">
+                    <img src={r.avatar || "/ridemate2.png"} alt="" className="h-7 w-7 rounded-full" />
+                    <span className="font-medium">{r.name}</span>
+                  </div>
                   <span className="text-gray-500">{r.email}</span>
                 </li>
               ))}
