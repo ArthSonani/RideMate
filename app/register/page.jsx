@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
+import Image from 'next/image'
 
 const Register = () => {
   
@@ -67,26 +68,32 @@ const Register = () => {
     }
   }
 
+  const handleGoogleLogin = async () => {
+    await signIn("google", { callbackUrl: "/dashboard" });
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{' '}
-            <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500">
-              sign in to your existing account
-            </Link>
-          </p>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
-              {error}
-            </div>
-          )}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 mt-10">
+      <div className="w-full">
+        <Image
+          src="/ridemate-main.png"
+          width={100}
+          height={100}
+          alt="RideMate Logo"
+          className="mx-auto mb-4"
+        />
+      </div>
+
+      <div className="w-full max-w-lg bg-white border border-gray-200 rounded-xl shadow-xl px-12 py-8 mb-12">
+        <h1 className="text-2xl font-bold text-center mb-6">
+          Create your account
+        </h1>
+
+        {error && (
+          <p className="mb-4 text-sm text-red-600 text-center">{error}</p>
+        )}
+
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -98,7 +105,7 @@ const Register = () => {
                 type="text"
                 autoComplete="name"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Enter your full name"
                 value={formData.name}
                 onChange={handleChange}
@@ -114,7 +121,7 @@ const Register = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
@@ -129,7 +136,7 @@ const Register = () => {
                 name="phone"
                 type="tel"
                 autoComplete="tel"
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Enter your phone number"
                 value={formData.phone}
                 onChange={handleChange}
@@ -145,7 +152,7 @@ const Register = () => {
                 type="password"
                 autoComplete="new-password"
                 required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Create a password"
                 value={formData.password}
                 onChange={handleChange}
@@ -157,12 +164,39 @@ const Register = () => {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-[#8c6170] text-white py-2 rounded-lg hover:bg-[#6C4B56] transition"
             >
               {loading ? 'Creating account...' : 'Create account'}
             </button>
           </div>
         </form>
+
+        <div className="my-8 flex items-center">
+          <div className="flex-grow border-t border-neutral-500" />
+          <span className="px-3 text-sm text-gray-500">OR</span>
+          <div className="flex-grow border-t border-neutral-500" />
+        </div>
+
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full flex items-center justify-center gap-2 border border-gray-300 py-2 rounded-lg hover:bg-gray-50 transition"
+        >
+          <img
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+          <span className="text-sm font-medium">
+            Continue with Google
+          </span>
+        </button>
+
+        <p className="mt-6 text-center text-sm text-gray-600">
+          sign in to your existing account?{" "}
+          <a href="/login" className="font-medium underline hover:text-gray-800">
+            Login
+          </a>
+        </p>
       </div>
     </div>
   )

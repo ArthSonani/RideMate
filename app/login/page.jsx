@@ -48,6 +48,7 @@ export default function LoginPage() {
           className="mx-auto mb-4"
         />
       </div>
+
       <div className="w-full max-w-lg bg-white border border-gray-200 rounded-xl shadow-xl px-12 py-8">
         <h1 className="text-2xl font-bold text-center mb-6">
           Login to your account
@@ -89,7 +90,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
+            className="w-full bg-[#8c6170] text-white py-2 rounded-lg hover:bg-[#6C4B56] transition"
           >
             {loading ? "Logging in..." : "Login"}
           </button>

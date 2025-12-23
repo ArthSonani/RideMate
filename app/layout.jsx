@@ -12,14 +12,12 @@ const RootLayout = ({children}) => {
   return (
     <html lang='en'>
         <body>
-          <div className='min-h-screen flex flex-col'>          
-            <Provider>
-              <Nav />
-              <main className='app'>
-                  {children}
-              </main>
-            </Provider>
-          </div>
+          <Provider>
+            <Nav />
+            <main className='app'>
+                {children}
+            </main>
+          </Provider>
         </body>
     </html>
   )
