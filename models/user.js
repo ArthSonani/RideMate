@@ -37,6 +37,7 @@ const UserSchema = new Schema({
 
     avatar: {
       type: String,
+      default: "/user.png",
     },
 
     rating: {
