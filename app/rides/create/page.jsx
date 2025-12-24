@@ -148,10 +148,12 @@ const CreateRide = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-6">
-        <h1 className="text-2xl font-semibold">Create a Ride</h1>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 p-8">
+        <h1 className="text-2xl font-semibold mt-4">Create a Ride</h1>
         <p className="text-sm text-gray-600 mt-1">Fill in pickup, dropoff, schedule, and pricing details.</p>
+
+        <div className="flex-grow border-t border-neutral-400 my-6" />
 
         {error && (
           <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
@@ -160,16 +162,18 @@ const CreateRide = () => {
         )}
 
         <form onSubmit={submit} className="space-y-6">
+
           {/* Locations */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
             {/* Pickup */}
-            <section className="rounded-xl border border-gray-200 p-4">
+            <section className="rounded-xl border border-gray-300 p-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-sm font-semibold text-gray-900">Pickup</h2>
                 <button
                   type="button"
                   onClick={() => geocode("source")}
-                  className="text-xs rounded-md border px-2 py-1 text-gray-700 hover:bg-gray-50"
+                  className="text-xs rounded-md border border-neutral-200 px-2 py-1 text-gray-700 hover:border-neutral-300"
                 >
                   Detect
                 </button>
@@ -180,7 +184,7 @@ const CreateRide = () => {
                 value={form.sourceAddress}
                 onChange={update}
                 onBlur={() => geocode("source")}
-                className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Pickup address"
                 required
               />
@@ -193,38 +197,45 @@ const CreateRide = () => {
               <div className="mt-3">
                 <label className="block text-xs font-medium text-gray-600">Coordinates (auto-filled)</label>
                 <div className="mt-1 grid grid-cols-2 gap-2">
-                  <input
-                    name="sourceLat"
-                    type="number"
-                    step="any"
-                    value={form.sourceLat}
-                    onChange={update}
-                    className="w-full rounded-lg border px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed blur-[0.5px]"
-                    disabled
-                    required
-                  />
-                  <input
-                    name="sourceLng"
-                    type="number"
-                    step="any"
-                    value={form.sourceLng}
-                    onChange={update}
-                    className="w-full rounded-lg border px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed blur-[0.5px]"
-                    disabled
-                    required
-                  />
+                  <div>
+                    <label className="mt-3 ml-2 block text-xs font-medium text-gray-400">Lat:</label>
+                    <input
+                      name="sourceLat"
+                      type="number"
+                      step="any"
+                      value={form.sourceLat}
+                      onChange={update}
+                      className="w-full rounded-lg border border-neutral-200 px-3 py-2 bg-gray-100 text-gray-400 cursor-not-allowed"
+                      disabled
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mt-3 ml-2 block text-xs font-medium text-gray-400">Lng:</label>
+                    <input
+                      name="sourceLng"
+                      type="number"
+                      step="any"
+                      value={form.sourceLng}
+                      onChange={update}
+                      className="w-full rounded-lg border border-neutral-200 px-3 py-2 bg-gray-100 text-gray-400 cursor-not-allowed"
+                      disabled
+                      required
+                    />
+                   </div>
                 </div>
               </div>
             </section>
 
             {/* Dropoff */}
-            <section className="rounded-xl border border-gray-200 p-4">
+            <section className="rounded-xl border border-gray-300 p-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-sm font-semibold text-gray-900">Dropoff</h2>
                 <button
                   type="button"
                   onClick={() => geocode("destination")}
-                  className="text-xs rounded-md border px-2 py-1 text-gray-700 hover:bg-gray-50"
+                  className="text-xs rounded-md border border-neutral-200 px-2 py-1 text-gray-700 hover:border-neutral-300"
                 >
                   Detect
                 </button>
@@ -235,7 +246,7 @@ const CreateRide = () => {
                 value={form.destinationAddress}
                 onChange={update}
                 onBlur={() => geocode("destination")}
-                className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="Dropoff address"
                 required
               />
@@ -248,65 +259,75 @@ const CreateRide = () => {
               <div className="mt-3">
                 <label className="block text-xs font-medium text-gray-600">Coordinates (auto-filled)</label>
                 <div className="mt-1 grid grid-cols-2 gap-2">
-                  <input
-                    name="destinationLat"
-                    type="number"
-                    step="any"
-                    value={form.destinationLat}
-                    onChange={update}
-                    className="w-full rounded-lg border px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed blur-[0.5px]"
-                    disabled
-                    required
-                  />
-                  <input
-                    name="destinationLng"
-                    type="number"
-                    step="any"
-                    value={form.destinationLng}
-                    onChange={update}
-                    className="w-full rounded-lg border px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed blur-[0.5px]"
-                    disabled
-                    required
-                  />
+                  <div>
+                    <label className="mt-3 ml-2 block text-xs font-medium text-gray-400">Lat:</label>
+                    <input
+                      name="destinationLat"
+                      type="number"
+                      step="any"
+                      value={form.destinationLat}
+                      onChange={update}
+                      className="w-full rounded-lg border px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed blur-[0.5px]"
+                      disabled
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mt-3 ml-2 block text-xs font-medium text-gray-400">Lat:</label>
+                    <input
+                      name="destinationLng"
+                      type="number"
+                      step="any"
+                      value={form.destinationLng}
+                      onChange={update}
+                      className="w-full rounded-lg border px-3 py-2 bg-gray-100 text-gray-500 cursor-not-allowed blur-[0.5px]"
+                      disabled
+                      required
+                    />
+                  </div>
+
                 </div>
               </div>
             </section>
           </div>
 
+
           {/* Schedule */}
-          <section className="rounded-xl border border-gray-200 p-4">
+          <section className="rounded-xl border border-gray-300 p-4">
             <h2 className="text-sm font-semibold text-gray-900">Schedule</h2>
             <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Date</label>
+                <label className="block text-xs font-medium text-gray-600">Date</label>
                 <input
                   name="date"
                   type="date"
                   value={form.date}
                   onChange={update}
-                  className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Time</label>
+                <label className="block text-xs font-medium text-gray-600">Time</label>
                 <input
                   name="time"
                   type="time"
                   value={form.time}
                   onChange={update}
-                  className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                   required
                 />
               </div>
             </div>
           </section>
 
+
           {/* Vehicle & Pricing */}
-          <section className="rounded-xl border border-gray-200 p-4">
+          <section className="rounded-xl border border-gray-300 p-4">
             <h2 className="text-sm font-semibold text-gray-900">Vehicle & Pricing</h2>
             <div className="mt-3">
-              <label className="block text-sm font-medium text-gray-700">Select Vehicle Type</label>
+              <label className="block text-xs font-medium text-gray-600">Select Vehicle Type</label>
               
               <div className="mt-2 flex">
                 {vehicleTypes.map((vt) => {
@@ -315,8 +336,8 @@ const CreateRide = () => {
                     <label
                       key={vt.value}
                       className={
-                        `h-20 w-20 mx-1 group cursor-pointer rounded-lg border p-3 flex flex-col items-center gap-2 ` +
-                        (selected ? "border-indigo-600 ring-2 ring-indigo-400 bg-indigo-50" : "border-gray-200 hover:border-indigo-300")
+                        `h-20 w-20 mx-1 group cursor-pointer rounded-lg border border-gray-200 p-3 flex flex-col items-center gap-2 ` +
+                        (selected ? "outline-none ring-2 ring-black" : "border-gray-300 hover:border-gray-400")
                       }
                     >
                       <input
@@ -332,27 +353,28 @@ const CreateRide = () => {
                       ) : (
                         <div className="h-8 w-8 rounded-md bg-gray-100 flex items-center justify-center text-gray-400 text-xs">Image</div>
                       )}
-                      <span className={selected ? "text-sm font-medium text-indigo-700" : "text-sm font-medium text-gray-700"}>{vt.label}</span>
+                      <span className={selected ? "text-xs font-medium text-gray-800" : "text-xs font-medium text-gray-500"}>{vt.label}</span>
                     </label>
                   );
                 })}
               </div>
             </div>
+
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Total Seats</label>
+                <label className="block text-xs font-medium text-gray-600">Total Seats</label>
                 <input
                   name="totalSeats"
                   type="number"
                   min="1"
                   value={form.totalSeats}
                   onChange={update}
-                  className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Price per Seat</label>
+                <label className="block text-xs font-medium text-gray-600">Price per Seat</label>
                 <input
                   name="pricePerSeat"
                   type="number"
@@ -360,7 +382,7 @@ const CreateRide = () => {
                   step="any"
                   value={form.pricePerSeat}
                   onChange={update}
-                  className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                   required
                 />
               </div>
@@ -371,7 +393,7 @@ const CreateRide = () => {
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 rounded-lg bg-indigo-600 text-white disabled:opacity-50 shadow-sm hover:bg-indigo-700"
+              className="px-4 py-2 w-2/5 rounded-lg bg-[#984764] text-white disabled:opacity-50 shadow-sm hover:bg-[#BD5A7C] transition"
             >
               {loading ? "Creating..." : "Create Ride"}
             </button>
