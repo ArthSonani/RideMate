@@ -88,7 +88,7 @@ export default function Dashboard() {
               alt="Avatar"
               width={96}
               height={96}
-              className="rounded-full ring-1 ring-black/15 p-2"
+              className="rounded-full ring-1 ring-black/15 p-1"
             />
             <div className="text-white">
               <h1 className="text-2xl font-semibold">{user?.name || "User"}</h1>
@@ -96,7 +96,10 @@ export default function Dashboard() {
               <div className="text-sm opacity-90">{user?.phone || "No phone"}</div>
               <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs">
                 <span className="text-white/90">Rating</span>
-                <span className="rounded bg-white/20 px-2 py-0.5 text-white">{user?.rating ?? 5}</span>
+                <span className="rounded bg-white/20 px-2 py-0.5 text-white inline-flex items-center gap-1">
+                  {user?.rating ?? 5}
+                  <span aria-hidden="true">⭐</span>
+                </span>
               </div>
             </div>
             <div className="ml-auto grid grid-cols-2 gap-3">
