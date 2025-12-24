@@ -6,8 +6,6 @@ import { useRouter } from "next/navigation";
 
 const CreateRide = () => {
   const { data: session, status } = useSession();
-
-  console.log("Session data in CreateRide:", session);
   
   const router = useRouter();
 
@@ -24,6 +22,15 @@ const CreateRide = () => {
     totalSeats: 1,
     pricePerSeat: 0,
   });
+
+  const vehicleTypes = [
+    { value: "auto", label: "Auto" },
+    { value: "bike", label: "Bike" },
+    { value: "economy", label: "Economy" },
+    { value: "sedan", label: "Sedan" },
+    { value: "xl", label: "XL" },
+    { value: "premier", label: "Premier" },
+  ];
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -298,23 +305,40 @@ const CreateRide = () => {
           {/* Vehicle & Pricing */}
           <section className="rounded-xl border border-gray-200 p-4">
             <h2 className="text-sm font-semibold text-gray-900">Vehicle & Pricing</h2>
-            <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Vehicle Type</label>
-                <select
-                  name="vehicleType"
-                  value={form.vehicleType}
-                  onChange={update}
-                  className="mt-1 w-full rounded-lg border px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                >
-                  <option value="auto">Auto</option>
-                  <option value="bike">Bike</option>
-                  <option value="economy">Economy</option>
-                  <option value="sedan">Sedan</option>
-                  <option value="xl">XL</option>
-                  <option value="premier">Premier</option>
-                </select>
+            <div className="mt-3">
+              <label className="block text-sm font-medium text-gray-700">Select Vehicle Type</label>
+              
+              <div className="mt-2 flex">
+                {vehicleTypes.map((vt) => {
+                  const selected = form.vehicleType === vt.value;
+                  return (
+                    <label
+                      key={vt.value}
+                      className={
+                        `h-20 w-20 mx-1 group cursor-pointer rounded-lg border p-3 flex flex-col items-center gap-2 ` +
+                        (selected ? "border-indigo-600 ring-2 ring-indigo-400 bg-indigo-50" : "border-gray-200 hover:border-indigo-300")
+                      }
+                    >
+                      <input
+                        type="radio"
+                        name="vehicleType"
+                        value={vt.value}
+                        checked={selected}
+                        onChange={update}
+                        className="sr-only"
+                      />
+                      {vt.value ? (
+                        <img src={`/${vt.value}.png`} alt={vt.label} className="h-8 w-8 object-contain" />
+                      ) : (
+                        <div className="h-8 w-8 rounded-md bg-gray-100 flex items-center justify-center text-gray-400 text-xs">Image</div>
+                      )}
+                      <span className={selected ? "text-sm font-medium text-indigo-700" : "text-sm font-medium text-gray-700"}>{vt.label}</span>
+                    </label>
+                  );
+                })}
               </div>
+            </div>
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Total Seats</label>
                 <input
