@@ -1,4 +1,3 @@
-'use client'
 
 import React from 'react'
 import Link from 'next/link'
@@ -8,7 +7,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <section className="flex flex-center relative pt-10 pb-10 sm:pt-32 sm:pb-40 bg-[#F0E5E9]">
+      <section className="flex flex-center relative pt-10 pb-10 sm:pt-32 sm:pb-40 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.15)_1px,transparent_1px)] [background-size:45px_45px]">
         <div className="flex justify-center items-center w-1/2 px-2 sm:px-2 lg:px-20">
           <div className="text-left">
             <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
@@ -46,15 +45,15 @@ const Home = () => {
             <Image
               src="/hero.png"
               alt="RideMate Hero"
-              width={500}
-              height={500}
-              className="object-cover object-center rounded-lg shadow-lg"
+              width={650}
+              height={650}
+              className="object-cover object-center rounded-lg p-2"
             />
         </div>
   
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-[#F0E5E9]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
             <h2 className="text-base text-[#984764] font-semibold tracking-wide uppercase">Features</h2>
