@@ -5,9 +5,19 @@ import GoogleDirectionsMap from "../../components/GoogleDirectionsMap";
 
 const vehicleTypes = ["auto", "bike", "economy", "sedan", "xl", "premier"];
 
-function RideCard({ ride }) {
+function RideCard({ ride, isSelected, onSelect }) {
+	const base = "rounded-lg border bg-white p-4 shadow-sm cursor-pointer transition-all duration-150";
+	const hover = "hover:shadow-md hover:border-gray-300";
+	const selected = isSelected ? "border-[#984764] ring-2 ring-[#984764] bg-[#fbf4f7]" : "border-gray-200";
 	return (
-		<div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+		<div
+			className={`${base} ${hover} ${selected}`}
+			onClick={onSelect}
+			role="button"
+			tabIndex={0}
+			onKeyDown={(e) => { if (e.key === "Enter") onSelect(); }}
+			aria-pressed={isSelected}
+		>
 			<div className="flex items-start justify-between gap-4">
 				<div>
 					<div className="text-sm font-semibold">
@@ -22,6 +32,9 @@ function RideCard({ ride }) {
 				</div>
 				<div className="text-right">
 					<div className="text-xs rounded bg-gray-100 px-2 py-0.5 capitalize inline-block">{ride.status}</div>
+					{isSelected && (
+						<div className="mt-2 inline-block rounded-full bg-[#984764]/10 text-[#984764] text-[11px] px-2 py-0.5">Selected</div>
+					)}
 					<a href={`/rides/${ride.id}`} className="mt-3 block text-sm text-blue-600 hover:underline">View details</a>
 				</div>
 			</div>
@@ -48,6 +61,9 @@ export default function BrowseRidesPage() {
 	const [rides, setRides] = useState([]);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(false);
+	const [selectedRide, setSelectedRide] = useState(null);
+	const [total, setTotal] = useState(0);
+	const [limit, setLimit] = useState(5);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const [geoLoading, setGeoLoading] = useState({ source: false, destination: false });
@@ -116,9 +132,13 @@ export default function BrowseRidesPage() {
 		if (filters.minSeats) params.set("minSeats", filters.minSeats);
 		if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
 		params.set("page", String(page));
-		params.set("limit", "10");
+		params.set("limit", "5");
 		return params.toString();
 	}, [filters, page]);
+
+	const totalPages = useMemo(() => {
+		return limit ? Math.ceil((total || 0) / limit) : 0;
+	}, [total, limit]);
 
 	async function fetchRides() {
 		try {
@@ -129,6 +149,8 @@ export default function BrowseRidesPage() {
 			const data = await res.json();
 			setRides(data.results || []);
 			setHasMore(Boolean(data.hasMore));
+			setTotal(typeof data.total === "number" ? data.total : 0);
+			setLimit(typeof data.limit === "number" ? data.limit : 5);
 		} catch (e) {
 			setError(e.message || "Failed to load rides");
 		} finally {
@@ -138,7 +160,7 @@ export default function BrowseRidesPage() {
 
 	useEffect(() => {
 		fetchRides();
-	}, []);
+	}, [queryString]);
 
 	return (
 		<div className="mx-auto max-w-screen px-4 py-8 bg-gray-50">
@@ -306,8 +328,8 @@ export default function BrowseRidesPage() {
 			<div className="w-full flex">
 				<div className="w-1/2 border border-gray-300 p-6">
 					<GoogleDirectionsMap
-						origin={"The atlantis, ramkatha road, katargam" || null}
-						destination={"sky heven villa, panchgini" || null}
+						origin={selectedRide?.source?.address || null}
+						destination={selectedRide?.destination?.address || null}
 						height={600}
 						className="rounded-lg"
 					/>
@@ -320,17 +342,46 @@ export default function BrowseRidesPage() {
 					) : rides.length === 0 ? (
 						<div className="py-10 text-center text-gray-500">No rides found. Try adjusting filters.</div>
 					) : (
-						<div className="grid gap-4">
+						<div className="grid gap-4 py-4 px-8">
 							{rides.map((r) => (
-								<RideCard key={r.id} ride={r} />
+								<RideCard
+									key={r.id}
+									ride={r}
+									isSelected={selectedRide?.id === r.id}
+									onSelect={() => setSelectedRide(r)}
+								/>
 							))}
 						</div>
 					)}
 
-					<div className="mt-6 flex items-center justify-center gap-2">
-						<button disabled={page === 1} onClick={() => setPage((p) => Math.max(1, p - 1))} className="rounded border px-3 py-1.5 disabled:opacity-50">Prev</button>
-						<span className="text-sm">Page {page}</span>
-						<button disabled={!hasMore} onClick={() => setPage((p) => p + 1)} className="rounded border px-3 py-1.5 disabled:opacity-50">Next</button>
+					<div className="mt-6 flex items-center justify-center gap-4">
+						<button
+							aria-label="Previous page"
+							disabled={page === 1}
+							onClick={() => setPage((p) => Math.max(1, p - 1))}
+							className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white shadow-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+							</svg>
+						</button>
+
+						<div className="min-w-[4rem] h-10 px-4 flex items-center justify-center rounded-lg border border-gray-300 bg-white shadow-sm">
+							<span className="text-sm font-semibold tracking-wide">
+								{totalPages > 0 ? `Page ${page} of ${totalPages}` : `Page ${page}`}
+							</span>
+						</div>
+
+						<button
+							aria-label="Next page"
+							disabled={totalPages === 0 || page >= totalPages}
+							onClick={() => setPage((p) => p + 1)}
+							className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white shadow-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
+								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+							</svg>
+						</button>
 					</div>
 				</div>
 
