@@ -61,6 +61,21 @@ export default function BrowseRidesPage() {
 	const [rides, setRides] = useState([]);
 	const [page, setPage] = useState(1);
 	const [hasMore, setHasMore] = useState(false);
+	// Applied filters are the ones used for fetching; "filters" are live inputs
+	const [appliedFilters, setAppliedFilters] = useState({
+		sourceAddress: "",
+		sourceLat: "",
+		sourceLng: "",
+		sourceRadiusKm: 10,
+		destinationAddress: "",
+		destLat: "",
+		destLng: "",
+		destRadiusKm: 10,
+		date: "",
+		vehicleType: "",
+		minSeats: "",
+		maxPrice: "",
+	});
 	const [selectedRide, setSelectedRide] = useState(null);
 	const [total, setTotal] = useState(0);
 	const [limit, setLimit] = useState(5);
@@ -117,24 +132,30 @@ export default function BrowseRidesPage() {
 
 	const queryString = useMemo(() => {
 		const params = new URLSearchParams();
-		if (filters.sourceLat && filters.sourceLng) {
-			params.set("sourceLat", filters.sourceLat);
-			params.set("sourceLng", filters.sourceLng);
-			params.set("sourceRadiusKm", String(filters.sourceRadiusKm || 10));
+		if (appliedFilters.sourceLat && appliedFilters.sourceLng) {
+			params.set("sourceLat", appliedFilters.sourceLat);
+			params.set("sourceLng", appliedFilters.sourceLng);
+			params.set("sourceRadiusKm", String(appliedFilters.sourceRadiusKm || 10));
 		}
-		if (filters.destLat && filters.destLng) {
-			params.set("destLat", filters.destLat);
-			params.set("destLng", filters.destLng);
-			params.set("destRadiusKm", String(filters.destRadiusKm || 10));
+		if (appliedFilters.sourceAddress) {
+			params.set("sourceAddress", appliedFilters.sourceAddress);
 		}
-		if (filters.date) params.set("date", filters.date);
-		if (filters.vehicleType) params.set("vehicleType", filters.vehicleType);
-		if (filters.minSeats) params.set("minSeats", filters.minSeats);
-		if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
+		if (appliedFilters.destLat && appliedFilters.destLng) {
+			params.set("destLat", appliedFilters.destLat);
+			params.set("destLng", appliedFilters.destLng);
+			params.set("destRadiusKm", String(appliedFilters.destRadiusKm || 10));
+		}
+		if (appliedFilters.destinationAddress) {
+			params.set("destinationAddress", appliedFilters.destinationAddress);
+		}
+		if (appliedFilters.date) params.set("date", appliedFilters.date);
+		if (appliedFilters.vehicleType) params.set("vehicleType", appliedFilters.vehicleType);
+		if (appliedFilters.minSeats) params.set("minSeats", appliedFilters.minSeats);
+		if (appliedFilters.maxPrice) params.set("maxPrice", appliedFilters.maxPrice);
 		params.set("page", String(page));
 		params.set("limit", "5");
 		return params.toString();
-	}, [filters, page]);
+	}, [appliedFilters, page]);
 
 	const totalPages = useMemo(() => {
 		return limit ? Math.ceil((total || 0) / limit) : 0;
@@ -292,7 +313,7 @@ export default function BrowseRidesPage() {
 
 							{/* Action Buttons */}
 							<div className="w-1/2 mt-auto flex justify-end items-center gap-2">
-								<button onClick={() => { setPage(1); fetchRides(); }} className="w-2/5 rounded bg-[#984764] hover:bg-[#BD5A7C] px-4 py-2 text-white">Search</button>
+								<button onClick={() => { setPage(1); setAppliedFilters(filters); }} className="w-2/5 rounded bg-[#984764] hover:bg-[#BD5A7C] px-4 py-2 text-white">Search</button>
 								<button
 									onClick={() => {
 										setFilters({
@@ -312,7 +333,20 @@ export default function BrowseRidesPage() {
 										// Clear any address-related geocode errors on reset
 										setGeoError({ source: "", destination: "" });
 										setPage(1);
-										fetchRides();
+										setAppliedFilters({
+											sourceAddress: "",
+											sourceLat: "",
+											sourceLng: "",
+											sourceRadiusKm: 10,
+											destinationAddress: "",
+											destLat: "",
+											destLng: "",
+											destRadiusKm: 10,
+											date: "",
+											vehicleType: "",
+											minSeats: "",
+											maxPrice: "",
+										});
 									}}
 									className="w-2/5 rounded border border-gray-300 hover:border-gray-400 hover:bg-gray-300 rounded px-4 py-2"
 								>

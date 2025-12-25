@@ -25,14 +25,16 @@ export async function GET(req) {
     const fromDateStr = sp.get("fromDate");
     const toDateStr = sp.get("toDate");
 
-    // Geo filters (source)
-    const sourceLat = parseNumber(sp.get("sourceLat"));
-    const sourceLng = parseNumber(sp.get("sourceLng"));
+    // Address / Geo filters (source)
+    const sourceAddress = sp.get("sourceAddress") || undefined;
+    let sourceLat = parseNumber(sp.get("sourceLat"));
+    let sourceLng = parseNumber(sp.get("sourceLng"));
     const sourceRadiusKm = parseNumber(sp.get("sourceRadiusKm"), 10); // default 10km
 
-    // Geo filters (destination)
-    const destLat = parseNumber(sp.get("destLat"));
-    const destLng = parseNumber(sp.get("destLng"));
+    // Address / Geo filters (destination)
+    const destinationAddress = sp.get("destinationAddress") || undefined;
+    let destLat = parseNumber(sp.get("destLat"));
+    let destLng = parseNumber(sp.get("destLng"));
     const destRadiusKm = parseNumber(sp.get("destRadiusKm"), 10);
 
     // Pagination
@@ -42,6 +44,29 @@ export async function GET(req) {
 
     await connectToDB();
 
+    // Helper: geocode address on server if lat/lng not provided
+    async function geocodeAddress(addr) {
+      try {
+        if (!addr) return null;
+        const apiKey = process.env.GOOGLE_GEOCODING_API_KEY;
+        if (!apiKey) return null;
+        const gurl = new URL("https://maps.googleapis.com/maps/api/geocode/json");
+        gurl.searchParams.set("address", addr);
+        gurl.searchParams.set("key", apiKey);
+        const gres = await fetch(gurl.toString());
+        if (!gres.ok) return null;
+        const gdata = await gres.json();
+        const best = gdata?.results?.[0];
+        const loc = best?.geometry?.location;
+        if (typeof loc?.lat === "number" && typeof loc?.lng === "number") {
+          return { lat: loc.lat, lng: loc.lng };
+        }
+        return null;
+      } catch (_) {
+        return null;
+      }
+    }
+
     const filter = {};
 
     if (vehicleType && ["auto", "bike", "economy", "sedan", "xl", "premier"].includes(vehicleType)) {
@@ -49,9 +74,6 @@ export async function GET(req) {
     }
     if (status && ["scheduled", "ongoing", "completed", "cancelled"].includes(status)) {
       filter.status = status;
-    } else {
-      // by default, show only upcoming/scheduled rides
-      filter.status = { $in: ["scheduled", "ongoing"] };
     }
     if (typeof minSeats === "number") {
       filter.availableSeats = { $gte: minSeats };
@@ -83,32 +105,48 @@ export async function GET(req) {
       }
     }
 
-    // Geospatial filters
-    const geoClauses = [];
+    // Geospatial / Address filters
+    // Attempt server-side geocoding if only address provided
+    if ((typeof sourceLat !== "number" || typeof sourceLng !== "number") && sourceAddress) {
+      const g = await geocodeAddress(sourceAddress);
+      if (g) {
+        sourceLat = g.lat;
+        sourceLng = g.lng;
+      }
+    }
+    if ((typeof destLat !== "number" || typeof destLng !== "number") && destinationAddress) {
+      const g = await geocodeAddress(destinationAddress);
+      if (g) {
+        destLat = g.lat;
+        destLng = g.lng;
+      }
+    }
+
+    // Build geo filters using $geoWithin + $centerSphere to avoid $near errors
+    // radius in radians = km / Earth's radius (km)
+    const EARTH_RADIUS_KM = 6378.1;
     if (typeof sourceLat === "number" && typeof sourceLng === "number") {
-      geoClauses.push({
-        sourceLocation: {
-          $near: {
-            $geometry: { type: "Point", coordinates: [sourceLng, sourceLat] },
-            $maxDistance: Math.round((sourceRadiusKm ?? 10) * 1000),
-          },
+      const radiusRad = (sourceRadiusKm ?? 10) / EARTH_RADIUS_KM;
+      filter.sourceLocation = {
+        $geoWithin: {
+          $centerSphere: [[sourceLng, sourceLat], radiusRad],
         },
-      });
+      };
+    } else if (sourceAddress) {
+      // Fallback to text match on source address
+      filter["source.address"] = { $regex: new RegExp(sourceAddress, "i") };
     }
+
     if (typeof destLat === "number" && typeof destLng === "number") {
-      geoClauses.push({
-        destinationLocation: {
-          $near: {
-            $geometry: { type: "Point", coordinates: [destLng, destLat] },
-            $maxDistance: Math.round((destRadiusKm ?? 10) * 1000),
-          },
+      const radiusRad = (destRadiusKm ?? 10) / EARTH_RADIUS_KM;
+      filter.destinationLocation = {
+        $geoWithin: {
+          $centerSphere: [[destLng, destLat], radiusRad],
         },
-      });
-    }
-    if (geoClauses.length === 1) {
-      Object.assign(filter, geoClauses[0]);
-    } else if (geoClauses.length > 1) {
-      filter.$and = geoClauses;
+      };
+    } else if (destinationAddress) {
+      // Fallback to text match on destination address
+      filter["destination.address"] = { $regex: new RegExp(destinationAddress, "i") };
     }
 
     const query = Ride.find(filter)
