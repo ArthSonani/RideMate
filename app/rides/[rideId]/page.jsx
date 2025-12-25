@@ -277,7 +277,7 @@ export default function RideDetails() {
                 <button
                   disabled={reqLoading}
                   onClick={sendRequest}
-                  className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+                  className="rounded px-4 py-2 text-white disabled:opacity-50 bg-[#984764] hover:bg-[#BD5A7C]"
                 >
                   {reqLoading ? "Requesting..." : "Request to Join"}
                 </button>
