@@ -360,7 +360,7 @@ export default function BrowseRidesPage() {
 
 			{/* Rides List */}
 			<div className="w-full flex">
-				<div className="w-1/2 border border-gray-300 p-6">
+				<div className="w-1/2 border border-gray-300 px-6 py-20">
 					<GoogleDirectionsMap
 						origin={selectedRide?.source?.address || null}
 						destination={selectedRide?.destination?.address || null}

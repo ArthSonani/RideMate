@@ -7,8 +7,8 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <section className="flex flex-center relative pt-10 pb-10 sm:pt-32 sm:pb-40 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.15)_1px,transparent_1px)] [background-size:45px_45px]">
-        <div className="flex justify-center items-center w-1/2 px-2 sm:px-2 lg:px-20">
+      <section className="flex flex-center relative pt-6 pb-6 sm:pt-32 sm:pb-40 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.15)_1px,transparent_1px)] [background-size:45px_45px]">
+        <div className="flex justify-center items-center w-auto px-2 sm:px-2 lg:px-20">
           <div className="text-left">
             <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
               <span className="block my-2">Share the Ride.</span>
@@ -41,8 +41,8 @@ const Home = () => {
           </div>
         </div>
 
-        <div className='flex justify-center items-center w-1/2 h-auto'>
-            <Image
+        <div className='flex justify-center items-center w-2/3 h-full'>
+            <img
               src="/hero.png"
               alt="RideMate Hero"
               width={650}

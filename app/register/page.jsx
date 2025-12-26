@@ -73,7 +73,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 mt-10">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 pt-20 bg-[linear-gradient(to_right,rgba(0,0,0,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.08)_1px,transparent_1px)] [background-size:45px_45px]">
       <div className="w-full">
         <Image
           src="/ridemate-main.png"

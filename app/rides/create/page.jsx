@@ -148,7 +148,7 @@ const CreateRide = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 bg-[linear-gradient(to_right,rgba(0,0,0,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.08)_1px,transparent_1px)] [background-size:45px_45px]">
       <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 p-8">
         <h1 className="text-2xl font-semibold mt-4">Create a Ride</h1>
         <p className="text-sm text-gray-600 mt-1">Fill in pickup, dropoff, schedule, and pricing details.</p>
