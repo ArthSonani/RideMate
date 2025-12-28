@@ -137,7 +137,7 @@ export default function Dashboard() {
               {createdRides.length === 0 ? (
                 <div className="text-sm text-gray-500 mt-2">No active rides you've created.</div>
               ) : (
-                <ul className="mt-3 space-y-3">
+                <ul className="mt-3 space-y-3 flex flex-col gap-3">
                   {createdRides.map((r) => (
                     <RideItem
                       key={r.id}
