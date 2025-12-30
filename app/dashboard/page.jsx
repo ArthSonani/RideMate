@@ -3,6 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 function Stat({ label, value }) {
   return (
@@ -40,6 +41,8 @@ function RideItem({ ride, actions }) {
 }
 
 export default function Dashboard() {
+  const router = useRouter();
+  
   const { status } = useSession();
   const [user, setUser] = useState(null);
   const [createdRides, setCreatedRides] = useState([]);
@@ -75,8 +78,8 @@ export default function Dashboard() {
   }
   if (status === "unauthenticated") {
     return (
-      <div className="min-h-screen flex items-center justify-center p-6">
-        <div className="max-w-md w-full bg-white rounded-xl shadow p-6 text-center">
+      <div className="min-h-screen w-full flex items-center justify-center p-6 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.15)_1px,transparent_1px)] [background-size:45px_45px]">
+        <div className="max-w-md w-full bg-transparent rounded-xl p-6 text-center">
           <p className="text-gray-700">You must be signed in to view your dashboard.</p>
           <button
             onClick={() => router.push("/login")}
