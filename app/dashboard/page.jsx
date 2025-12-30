@@ -74,7 +74,19 @@ export default function Dashboard() {
     return <div className="p-6">Loading dashboard...</div>;
   }
   if (status === "unauthenticated") {
-    return <div className="p-6">Please login to access dashboard.</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center p-6">
+        <div className="max-w-md w-full bg-white rounded-xl shadow p-6 text-center">
+          <p className="text-gray-700">You must be signed in to view your dashboard.</p>
+          <button
+            onClick={() => router.push("/login")}
+            className="mt-4 px-4 py-2 rounded bg-[#984764] hover:bg-[#BD5A7C] text-white"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
