@@ -2,45 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 import GoogleDirectionsMap from "../../components/GoogleDirectionsMap";
+import RideCard from "@components/RideCard";
 
 const vehicleTypes = ["auto", "bike", "economy", "sedan", "xl", "premier"];
-
-function RideCard({ ride, isSelected, onSelect }) {
-	const base = "rounded-lg border bg-white p-4 shadow-sm cursor-pointer transition-all duration-150";
-	const hover = "hover:shadow-md hover:border-gray-300";
-	const selected = isSelected ? "border-[#984764] ring-2 ring-[#984764] bg-[#fbf4f7]" : "border-gray-200";
-	return (
-		<div
-			className={`${base} ${hover} ${selected}`}
-			onClick={onSelect}
-			role="button"
-			tabIndex={0}
-			onKeyDown={(e) => { if (e.key === "Enter") onSelect(); }}
-			aria-pressed={isSelected}
-		>
-			<div className="flex items-start justify-between gap-4">
-				<div>
-					<div className="text-sm font-semibold">
-						{ride.source?.address} → {ride.destination?.address}
-					</div>
-					<div className="mt-1 text-xs text-gray-500">
-						{new Date(ride.date).toLocaleString()} · {ride.vehicleType}
-					</div>
-					<div className="mt-2 text-sm">
-						<span className="font-medium">₹ {ride.pricePerSeat}</span> per seat · {ride.availableSeats}/{ride.totalSeats} available
-					</div>
-				</div>
-				<div className="text-right">
-					<div className="text-xs rounded bg-gray-100 px-2 py-0.5 capitalize inline-block">{ride.status}</div>
-					{isSelected && (
-						<div className="mt-2 inline-block rounded-full bg-[#984764]/10 text-[#984764] text-[11px] px-2 py-0.5">Selected</div>
-					)}
-					<a href={`/rides/${ride.id}`} className="mt-3 block text-sm text-blue-600 hover:underline">View details</a>
-				</div>
-			</div>
-		</div>
-	);
-}
 
 export default function BrowseRidesPage() {
 	const [filters, setFilters] = useState({

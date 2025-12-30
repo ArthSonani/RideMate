@@ -138,7 +138,7 @@ const CreateRide = () => {
           <p className="text-gray-700">You must be signed in to create a ride.</p>
           <button
             onClick={() => router.push("/login")}
-            className="mt-4 px-4 py-2 rounded bg-blue-600 text-white"
+            className="mt-4 px-4 py-2 rounded bg-[#984764] hover:bg-[#BD5A7C] text-white"
           >
             Go to Login
           </button>
