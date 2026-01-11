@@ -4,6 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import RideItem from "../../components/RideItem";
 
 function Stat({ label, value }) {
   return (
@@ -11,32 +12,6 @@ function Stat({ label, value }) {
       <div className="text-2xl font-semibold text-white">{value}</div>
       <div className="text-xs text-white/80">{label}</div>
     </div>
-  );
-}
-
-function RideItem({ ride, actions }) {
-  return (
-    <Link href={`/rides/${ride.id}`}>
-      <li className="rounded-xl border border-neutral-300 bg-white p-4 shadow-sm">
-        <div className="flex justify-between">
-          <div>
-            <div className="text-sm font-semibold">
-              {ride.source?.address} → {ride.destination?.address}
-            </div>
-            <div className="text-xs text-gray-500">
-              {new Date(ride.date).toLocaleString()} · {ride.vehicleType} · ₹{ride.pricePerSeat}
-            </div>
-            <div className="text-xs text-gray-500 mt-1">
-              Seats: {ride.availableSeats}/{ride.totalSeats}
-            </div>
-          </div>
-          <div className="text-right">
-            <span className="inline-block rounded bg-gray-100 px-2 py-0.5 text-xs capitalize">{ride.status}</span>
-          </div>
-        </div>
-        {actions}
-      </li>
-    </Link>
   );
 }
 
@@ -112,7 +87,7 @@ export default function Dashboard() {
               <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs">
                 <span className="text-white/90">Rating</span>
                 <span className="rounded bg-white/20 px-2 py-0.5 text-white inline-flex items-center gap-1">
-                  {user?.rating ?? 5}
+                  {user?.rating || 5}
                   <span aria-hidden="true">⭐</span>
                 </span>
               </div>
@@ -243,8 +218,8 @@ export default function Dashboard() {
             </section>
 
             <div className="mt-8">
-              <Link href="/dashboard/my-rides" className="text-indigo-700 hover:underline text-sm font-medium">
-                View all rides →
+              <Link href="/dashboard/history" className="text-indigo-700 hover:underline text-sm font-medium">
+                View all History →
               </Link>
             </div>
           </>

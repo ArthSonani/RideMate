@@ -20,7 +20,7 @@ const Home = () => {
             </p>
             <div className="mt-5 max-w-md sm:flex sm:justify-center md:mt-8">
               <div className="rounded-md shadow">
-                <Link href="/rides" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#984764] hover:bg-[#BD5A7C] md:py-4 md:text-lg md:px-10 transition-colors">
+                <Link href="/rides" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-[#ffc312] hover:bg-[#BD5A7C] md:py-4 md:text-lg md:px-10 transition-colors">
                   Find a Ride
                   <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -51,7 +51,7 @@ const Home = () => {
   
       </section>
 
-      <section className="py-16 bg-[#F0E5E9]">
+      <section className="py-16 bg-[#FFF9C4]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
             <h2 className="text-base text-[#984764] font-semibold tracking-wide uppercase">Features</h2>
@@ -129,13 +129,13 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="bg-[#984764]">
+      <section className="bg-[#ffc312]">
         <div className="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-            <span className="block">Ready to start sharing rides?</span>
-            <span className="block">Join RideMate today.</span>
+            <span className="block text-black">Ready to start sharing rides?</span>
+            <span className="block text-black">Join RideMate today.</span>
           </h2>
-          <p className="mt-4 text-lg leading-6 text-neutral-400">
+          <p className="mt-4 text-lg leading-6 text-gray-500">
             Create your account and start connecting with riders in your area.
           </p>
           <Link href="/register" className="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-neutral-300 sm:w-auto transition-colors">
