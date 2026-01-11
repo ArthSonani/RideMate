@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import GoogleDirectionsMap from "../../components/GoogleDirectionsMap";
-import RideCard from "@components/RideCard";
+import RideItem from "@components/RideItem";
 
 const vehicleTypes = ["auto", "bike", "economy", "sedan", "xl", "premier"];
 
@@ -41,6 +41,7 @@ export default function BrowseRidesPage() {
 		maxPrice: "",
 	});
 	const [selectedRide, setSelectedRide] = useState(null);
+	console.log(selectedRide)
 	const [total, setTotal] = useState(0);
 	const [limit, setLimit] = useState(5);
 	const [loading, setLoading] = useState(true);
@@ -99,7 +100,6 @@ export default function BrowseRidesPage() {
 		if (appliedFilters.sourceLat && appliedFilters.sourceLng) {
 			params.set("sourceLat", appliedFilters.sourceLat);
 			params.set("sourceLng", appliedFilters.sourceLng);
-			params.set("sourceRadiusKm", String(appliedFilters.sourceRadiusKm || 10));
 		}
 		if (appliedFilters.sourceAddress) {
 			params.set("sourceAddress", appliedFilters.sourceAddress);
@@ -107,7 +107,6 @@ export default function BrowseRidesPage() {
 		if (appliedFilters.destLat && appliedFilters.destLng) {
 			params.set("destLat", appliedFilters.destLat);
 			params.set("destLng", appliedFilters.destLng);
-			params.set("destRadiusKm", String(appliedFilters.destRadiusKm || 10));
 		}
 		if (appliedFilters.destinationAddress) {
 			params.set("destinationAddress", appliedFilters.destinationAddress);
@@ -152,12 +151,12 @@ export default function BrowseRidesPage() {
 			<h1 className="ml-6 text-2xl font-semibold tracking-tight">Browse Rides</h1>
 			<p className="ml-6 mb-2 text-sm text-gray-600">Fill in pickup, dropoff, schedule, and pricing details.</p>
 
-			<div className="mb-6 mx-4 rounded-lg border border-neutral-200 bg-white p-4 shadow-md">
+			<div className="mb-6 mx-4 rounded-lg border border-neutral-300 bg-white p-4 shadow-sm">
 				<div className="flex flex-row item-center justify-around">
 					{/* Location Filters */}
 					<div className="w-1/2 grid grid-cols-1 gap-4 md:grid-cols-2">
 						{/* Source */}
-						<div className="flex flex-col p-2 border border-gray-300 rounded">
+						<div className="flex flex-col p-2 border border-gray-200 rounded">
 							<div className="flex flex-col">
 								<label className="block text-xs font-medium text-gray-700">Source</label>
 								<input
@@ -170,37 +169,24 @@ export default function BrowseRidesPage() {
 								/>
 
 								{geoLoading.source && (
-									<span className="text-xs text-gray-500">Filling...</span>
+									<span className="text-xs text-gray-500 ml-2">Filling...</span>
 								)}
 								{geoError.source && (
-									<span className="text-xs text-red-500">{geoError.source}</span>
+									<span className="text-xs text-red-500 ml-2">{geoError.source}</span>
 								)}
 								{!geoError.source && !geoLoading.source && (
 									<span className="text-xs text-gray-500">&nbsp;</span>
 								)}
 
 								<div className="flex flex-row gap-2 items-center">
-									<div disabled className="px-2 py-1 text-xs text-neutral-400" placeholder="Lat">Lat: {filters.sourceLat ? filters.sourceLat : "XX"}</div>
-									<div disabled className="px-2 py-1 text-xs text-neutral-400" placeholder="Lng">Lng: {filters.sourceLng ? filters.sourceLng : "XX"}</div>
+									<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lat">Lat: {filters.sourceLat ? filters.sourceLat : "XX"}</div>
+									<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lng">Lng: {filters.sourceLng ? filters.sourceLng : "XX"}</div>
 								</div>
-							</div>
-							
-							<div className="flex flex-col items-left">
-								<label className="block text-xs font-medium text-gray-700">Near Source (Km)</label>
-								<input
-									name="sourceRadiusKm"
-									type="number"
-									min="1"
-									value={filters.sourceRadiusKm}
-									onChange={onChange}
-									className="mt-1 mx-2 w-20 h-6 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
-									title="Radius (km)"
-								/>
 							</div>
 						</div>
 
 						{/* Destination */}
-						<div className="flex flex-col p-2 border border-gray-300 rounded">
+						<div className="flex flex-col p-2 border border-gray-200 rounded">
 							<div className="flex flex-col">
 								<label className="block text-xs font-medium text-gray-700">Destination</label>
 								<input
@@ -213,31 +199,18 @@ export default function BrowseRidesPage() {
 								/>
 
 								{geoLoading.destination && (
-									<span className="text-xs text-gray-500">Filling...</span>
+									<span className="text-xs text-gray-500 ml-2">Filling...</span>
 								)}
 								{geoError.destination && (
-									<span className="text-xs text-red-500">{geoError.destination}</span>
+									<span className="text-xs text-red-500 ml-2">{geoError.destination}</span>
 								)}
 								{!geoError.destination && !geoLoading.destination && (
-									<span className="text-xs text-gray-500">&nbsp;</span>
+									<span className="text-xs text-gray-500 ml-2">&nbsp;</span>
 								)}
 
 								<div className="flex flex-row gap-2 items-center">
-									<div disabled className="px-2 py-1 text-xs text-neutral-400" placeholder="Lat">Lat: {filters.destLat ? filters.destLat : "XX"}</div>
-									<div disabled className="px-2 py-1 text-xs text-neutral-400" placeholder="Lng">Lng: {filters.destLng ? filters.destLng : "XX"}</div>
-								</div>
-							
-								<div className="flex flex-col items-left">
-									<label className="block text-xs font-medium text-gray-700">Near Destination (Km)</label>
-									<input
-										name="destRadiusKm"
-										type="number"
-										min="1"
-										value={filters.destRadiusKm}
-										onChange={onChange}
-										className="mt-1 mx-2 w-20 h-6 border border-gray-300 rounded border px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
-										title="Radius (km)"
-									/>
+									<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lat">Lat: {filters.destLat ? filters.destLat : "XX"}</div>
+									<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lng">Lng: {filters.destLng ? filters.destLng : "XX"}</div>
 								</div>
 							</div>
 						</div>
@@ -245,39 +218,39 @@ export default function BrowseRidesPage() {
 
 
 					{/* Other Filters */}
-					<div className="w-1/2 flex flex-col p-2">
+					<div className="w-1/2 flex items-center justify-center">
 
-						<div className="h-1/2 flex flex-row justify-around items-center p-2">
-							<div>
-								<label className="block text-xs font-medium text-gray-700">Date</label>
-								<input name="date" type="date" value={filters.date} onChange={onChange} className="mt-1 w-full border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+						<div className="h-full w-full flex flex-row justify-around items-center">
+							<div className="flex flex-col gap-2 items-left">
+								<div>
+									<label className="block text-xs font-medium text-gray-700">Date</label>
+									<input name="date" type="date" value={filters.date} onChange={onChange} className="mt-1 w-full h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+								</div>
+								<div className="w-1/2 flex flex-col items-left">
+									<label className="block text-xs font-medium text-gray-700">Vehicle Type</label>
+									<select name="vehicleType" value={filters.vehicleType} onChange={onChange} className="mt-1 h-8 w-40 border border-gray-300 rounded px-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black">
+										<option value="">Any</option>
+										{vehicleTypes.map((t) => (
+											<option key={t} value={t}>
+												{t}
+											</option>
+										))}
+									</select>
+								</div>
 							</div>
-							<div>
-								<label className="block text-xs font-medium text-gray-700">Min Seats</label>
-								<input name="minSeats" type="number" min="1" value={filters.minSeats} onChange={onChange} className="mt-1 w-full border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+							<div className="flex flex-col gap-2 items-center justify-center">
+								<div>
+									<label className="block text-xs font-medium text-gray-700">Min Seats</label>
+									<input name="minSeats" type="number" min="1" value={filters.minSeats} placeholder="Enter count" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+								</div>
+								<div>
+									<label className="block text-xs font-medium text-gray-700">Max Price</label>
+									<input name="maxPrice" type="number" min="0" step="any" value={filters.maxPrice} placeholder="Enter price" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+								</div>
 							</div>
-							<div>
-								<label className="block text-xs font-medium text-gray-700">Max Price</label>
-								<input name="maxPrice" type="number" min="0" step="any" value={filters.maxPrice} onChange={onChange} className="mt-1 w-full border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
-							</div>
-						</div>
-
-						<div className="h-1/2 flex gap-4 p-2">
-							<div className="w-1/2 flex flex-col items-left px-3">
-								<label className="block text-xs font-medium text-gray-700">Vehicle Type</label>
-								<select name="vehicleType" value={filters.vehicleType} onChange={onChange} className="mt-1 w-2/3 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black">
-									<option value="">Any</option>
-									{vehicleTypes.map((t) => (
-										<option key={t} value={t}>
-											{t}
-										</option>
-									))}
-								</select>
-							</div>
-
+							
 							{/* Action Buttons */}
-							<div className="w-1/2 mt-auto flex justify-end items-center gap-2">
-								<button onClick={() => { setPage(1); setAppliedFilters(filters); }} className="w-2/5 rounded bg-[#984764] hover:bg-[#BD5A7C] px-4 py-2 text-white">Search</button>
+							<div className="mt-auto flex flex-col justify-end items-end gap-2">
 								<button
 									onClick={() => {
 										setFilters({
@@ -312,10 +285,11 @@ export default function BrowseRidesPage() {
 											maxPrice: "",
 										});
 									}}
-									className="w-2/5 rounded border border-gray-300 hover:border-gray-400 hover:bg-gray-300 rounded px-4 py-2"
+									className="w-20 h-8 rounded border border-gray-300 hover:border-gray-400 hover:bg-gray-300 rounded px-4 py-1"
 								>
 									Reset
 								</button>
+								<button onClick={() => { setPage(1); setAppliedFilters(filters); }} className="w-20 h-8 rounded bg-[#984764] hover:bg-[#BD5A7C] px-4 py-1 text-white">Search</button>
 							</div>
 						</div>
 					</div>
@@ -323,16 +297,23 @@ export default function BrowseRidesPage() {
 			</div>
 
 			{/* Rides List */}
-			<div className="w-full flex">
-				<div className="w-1/2 border border-gray-300 px-6 py-20">
-					<GoogleDirectionsMap
+			<div className="w-full h-auto flex">
+				<div className="w-[45%] flex items-center justify-center p-4">
+					{!selectedRide ? (
+						<div className="w-full h-full rounded-lg border border-gray-300 p-5 flex items-center justify-center text-gray-800">
+							Select a ride to see directions
+						</div>
+					) : 
+					
+					(<GoogleDirectionsMap
 						origin={selectedRide?.source?.address || null}
 						destination={selectedRide?.destination?.address || null}
-						height={600}
-						className="rounded-lg"
-					/>
+						className="w-full h-full rounded-lg border border-gray-300 p-5"
+						height={400}
+					/>)}
+					
 				</div>
-				<div className="w-1/2 px-4">
+				<div className="w-[55%] px-4 overflow-y-auto max-h-[600px]">
 					{loading ? (
 						<div className="py-10 text-center text-gray-500">Loading rides...</div>
 					) : error ? (
@@ -340,15 +321,21 @@ export default function BrowseRidesPage() {
 					) : rides.length === 0 ? (
 						<div className="py-10 text-center text-gray-500">No rides found. Try adjusting filters.</div>
 					) : (
-						<div className="grid gap-4 py-4 px-8">
-							{rides.map((r) => (
-								<RideCard
-									key={r.id}
-									ride={r}
-									isSelected={selectedRide?.id === r.id}
-									onSelect={() => setSelectedRide(r)}
-								/>
-							))}
+						<div className="grid gap-4 py-5 px-8">
+							{rides.map((r) => {
+								const isSelected = selectedRide?.id === r.id;
+								return (
+									<div
+										key={r.id}
+										onClick={() => setSelectedRide(r)}
+										className={`rounded-xl ${isSelected ? "ring-2 ring-blue-400" : "ring-0"} cursor-pointer`}
+										role="button"
+										aria-selected={isSelected}
+									>
+										<RideItem ride={r} />
+									</div>
+								);
+							})}
 						</div>
 					)}
 

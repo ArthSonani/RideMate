@@ -42,7 +42,7 @@ export default function GoogleDirectionsMap({
     }
 
     const map = new g.maps.Map(mapRef.current, {
-      center: { lat: 21.1702, lng: 72.8311 }, // default center (Surat)
+      center: { lat: 21.1702, lng: 72.8311 },
       zoom: 7,
       mapTypeControl: false,
       streetViewControl: false,

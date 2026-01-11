@@ -29,13 +29,13 @@ export async function GET(req) {
     const sourceAddress = sp.get("sourceAddress") || undefined;
     let sourceLat = parseNumber(sp.get("sourceLat"));
     let sourceLng = parseNumber(sp.get("sourceLng"));
-    const sourceRadiusKm = parseNumber(sp.get("sourceRadiusKm"), 10); // default 10km
+    const sourceRadiusKm = parseNumber(10); // default 10km
 
     // Address / Geo filters (destination)
     const destinationAddress = sp.get("destinationAddress") || undefined;
     let destLat = parseNumber(sp.get("destLat"));
     let destLng = parseNumber(sp.get("destLng"));
-    const destRadiusKm = parseNumber(sp.get("destRadiusKm"), 10);
+    const destRadiusKm = parseNumber(10);
 
     // Pagination
     const page = Math.max(1, parseNumber(sp.get("page"), 1));
