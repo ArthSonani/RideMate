@@ -8,9 +8,9 @@ import RideItem from "../../components/RideItem";
 
 function Stat({ label, value }) {
   return (
-    <div className="rounded-xl bg-white/10 px-4 py-3 text-center border border-white/20">
-      <div className="text-2xl font-semibold text-white">{value}</div>
-      <div className="text-xs text-white/80">{label}</div>
+    <div className="rounded-xl bg-black/10 px-4 py-3 text-center border border-white/20">
+      <div className="text-2xl font-semibold text-black">{value}</div>
+      <div className="text-xs text-black/80">{label}</div>
     </div>
   );
 }
@@ -70,7 +70,7 @@ export default function Dashboard() {
   return (
     <div className="p-0">
       {/* Hero / User Info */}
-      <div className="bg-[#984764]">
+      <div className="bg-[#FFF9C4]">
         <div className="mx-auto max-w-5xl px-6 py-8">
           <div className="flex items-center gap-5">
             <img
@@ -80,13 +80,13 @@ export default function Dashboard() {
               height={96}
               className="rounded-full ring-1 ring-black/15 p-1"
             />
-            <div className="text-white">
+            <div className="text-black">
               <h1 className="text-2xl font-semibold">{user?.name || "User"}</h1>
               <div className="text-sm opacity-90">{user?.email}</div>
               <div className="text-sm opacity-90">{user?.phone || "No phone"}</div>
               <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs">
-                <span className="text-white/90">Rating</span>
-                <span className="rounded bg-white/20 px-2 py-0.5 text-white inline-flex items-center gap-1">
+                <span className="text-black">Rating</span>
+                <span className="rounded bg-white/20 px-2 py-0.5 text-black inline-flex items-center gap-1">
                   {user?.rating || 5}
                   <span aria-hidden="true">⭐</span>
                 </span>
@@ -98,21 +98,22 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="mt-5 flex items-center gap-3">
-            <Link href="/rides/create" className="rounded-lg bg-white text-indigo-700 px-4 py-2 text-sm font-medium shadow">
+            <Link href="/rides/create" className="rounded-lg bg-white text-black-700 px-4 py-2 text-sm font-medium shadow">
               Create Ride
             </Link>
-            <Link href="/dashboard/my-rides" className="rounded-lg bg-white/20 text-white px-4 py-2 text-sm font-medium shadow border border-white/30">
+            <Link href="/dashboard/my-rides" className="rounded-lg bg-white/20 text-black px-4 py-2 text-sm font-medium shadow border border-white/30">
               Manage Rides
             </Link>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="ml-auto rounded-lg bg-black/30 text-white px-4 py-2 text-sm border border-white/30"
+              className="ml-auto rounded-lg bg-black/30 text-black px-4 py-2 text-sm border border-white/30"
             >
               Logout
             </button>
           </div>
         </div>
       </div>
+
 
       <div className="mx-auto max-w-5xl px-6 py-8">
         {loading ? (
