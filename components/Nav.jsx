@@ -29,7 +29,7 @@ const Nav = () => {
                   <Link href="/login" className="bg-gray-100 text-gray-700 hover:bg-neutral-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                     Sign In
                   </Link>
-                  <Link href="/register" className="bg-[#984764] hover:bg-[#BD5A7C] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                  <Link href="/register" className="bg-[#212529] hover:bg-[#343a40] text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
                     Get Started
                   </Link>
                 </>

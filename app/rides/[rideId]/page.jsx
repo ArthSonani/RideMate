@@ -364,18 +364,18 @@ export default function RideDetails() {
             {session ? (
               isOwner ? (
                 ride.status === "scheduled" ? (
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-end gap-3">
                     <button
                       disabled={reqLoading}
                       onClick={() => updateStatus("completed")}
-                      className="rounded px-4 py-2 text-white disabled:opacity-50 bg-blue-600 hover:bg-blue-700"
+                      className="rounded-lg px-4 py-2 text-white disabled:opacity-50 bg-blue-500 hover:bg-blue-600"
                     >
                       {reqLoading ? "Updating..." : "Mark as Completed"}
                     </button>
                     <button
                       disabled={reqLoading}
                       onClick={() => updateStatus("cancelled")}
-                      className="rounded px-4 py-2 text-white disabled:opacity-50 bg-red-600 hover:bg-red-700"
+                      className="rounded-lg px-4 py-2 text-white disabled:opacity-50 bg-red-500 hover:bg-red-600"
                     >
                       {reqLoading ? "Updating..." : "Cancel Ride"}
                     </button>
@@ -403,7 +403,7 @@ export default function RideDetails() {
         </section>
 
         {Array.isArray(ride.requests) && ride.requests.length > 0 && (
-          <section className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
+          <section className="rounded-lg border border-gray-300 bg-white p-5 shadow-sm">
             <h2 className="text-lg font-medium">Requests</h2>
             <ul className="mt-3 space-y-2 text-sm">
               {ride.requests.map((r, idx) => (
@@ -420,14 +420,14 @@ export default function RideDetails() {
                       <button
                         disabled={reqLoading}
                         onClick={() => acceptRequest(r.userId)}
-                        className="rounded px-3 py-1 text-xs text-white disabled:opacity-50 bg-blue-600 hover:bg-blue-700"
+                        className="rounded px-3 py-1 border border-[#1565c0] text-xs text-black disabled:opacity-50 bg-[#64b5f6] hover:bg-[#42a5f5]"
                       >
                         {reqLoading ? "Accepting..." : "Accept"}
                       </button>
                       <button
                         disabled={reqLoading}
                         onClick={() => rejectRequest(r.userId)}
-                        className="rounded px-3 py-1 text-xs text-white disabled:opacity-50 bg-red-600 hover:bg-red-700"
+                        className="rounded px-3 py-1 text-xs border border-[#a4161a] text-black disabled:opacity-50 bg-[#ff4b3e] hover:bg-[#e5383b]"
                       >
                         {reqLoading ? "Rejecting..." : "Reject"}
                       </button>
