@@ -8,7 +8,7 @@ import RideItem from "../../components/RideItem";
 
 function Stat({ label, value }) {
   return (
-    <div className="rounded-xl bg-black/10 px-4 py-3 text-center border border-white/20">
+    <div className="rounded-xl bg-[#dee2e6] px-4 py-3 text-center border border-white/20">
       <div className="text-2xl font-semibold text-black">{value}</div>
       <div className="text-xs text-black/80">{label}</div>
     </div>
@@ -70,7 +70,7 @@ export default function Dashboard() {
   return (
     <div className="p-0">
       {/* Hero / User Info */}
-      <div className="bg-[#FFF9C4]">
+      <div className="bg-[#212529]">
         <div className="mx-auto max-w-5xl px-6 py-8">
           <div className="flex items-center gap-5">
             <img
@@ -78,15 +78,15 @@ export default function Dashboard() {
               alt="Avatar"
               width={96}
               height={96}
-              className="rounded-full ring-1 ring-black/15 p-1"
+              className={"rounded-full ring-2 ring-black/15 p-1 ring-[#495057]"}
             />
-            <div className="text-black">
+            <div className="text-[#e9ecef]">
               <h1 className="text-2xl font-semibold">{user?.name || "User"}</h1>
               <div className="text-sm opacity-90">{user?.email}</div>
               <div className="text-sm opacity-90">{user?.phone || "No phone"}</div>
               <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs">
-                <span className="text-black">Rating</span>
-                <span className="rounded bg-white/20 px-2 py-0.5 text-black inline-flex items-center gap-1">
+                <span className="text-[#e9ecef]">Rating</span>
+                <span className="rounded bg-white/20 px-2 py-0.5 text-[#e9ecef] inline-flex items-center gap-1">
                   {user?.rating || 5}
                   <span aria-hidden="true">⭐</span>
                 </span>
@@ -98,15 +98,18 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="mt-5 flex items-center gap-3">
-            <Link href="/rides/create" className="rounded-lg bg-white text-black-700 px-4 py-2 text-sm font-medium shadow">
+            <Link href="/rides/create" className="rounded-lg bg-[#f8f9fa] hover:bg-[#ced4da] text-black-700 px-4 py-2 text-sm font-medium shadow">
               Create Ride
             </Link>
-            <Link href="/dashboard/my-rides" className="rounded-lg bg-white/20 text-black px-4 py-2 text-sm font-medium shadow border border-white/30">
-              Manage Rides
+            <Link href="/dashboard/history" className="group flex items-center justify-center rounded-lg bg-[#212529] hover:bg-[#343a40] text-[#e9ecef] px-4 py-2 text-sm font-medium shadow border border-white/30">
+              View all History 
+              <svg className="ml-2 h-5 w-5 transition-all duration-150 ease-out transform group-hover:translate-x-1 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
             </Link>
             <button
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="ml-auto rounded-lg bg-black/30 text-black px-4 py-2 text-sm border border-white/30"
+              className="ml-auto rounded-lg bg-[#212529] hover:bg-[#343a40] text-[#f8f9fa] px-4 py-2 text-sm border border-white/30"
             >
               Logout
             </button>
@@ -190,7 +193,7 @@ export default function Dashboard() {
             </section>
 
             {/* Joined rides */}
-            <section className="mt-8">
+            <section className="my-10">
               <h2 className="text-lg font-semibold">Joined Rides</h2>
               {joinedRides.length === 0 ? (
                 <div className="text-sm text-gray-500 mt-2">No rides you've joined.</div>
@@ -200,29 +203,11 @@ export default function Dashboard() {
                     <RideItem
                       key={r.id}
                       ride={r}
-                      actions={
-                        <div className="mt-3 flex items-center gap-2 text-xs text-gray-600">
-                          {r.driver && (
-                            <div className="inline-flex items-center gap-2">
-                              <img src={r.driver.avatar || "/user.png"} alt="" className="h-6 w-6 rounded-full" />
-                              <span>Driver: {r.driver.name}</span>
-                              <span className="text-gray-400">•</span>
-                              <span>{r.driver.email}</span>
-                            </div>
-                          )}
-                        </div>
-                      }
                     />
                   ))}
                 </ul>
               )}
             </section>
-
-            <div className="mt-8">
-              <Link href="/dashboard/history" className="text-indigo-700 hover:underline text-sm font-medium">
-                View all History →
-              </Link>
-            </div>
           </>
         )}
       </div>
