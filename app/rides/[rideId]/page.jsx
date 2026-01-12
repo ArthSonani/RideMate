@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
+import { CiCalendar } from "react-icons/ci";
+import { IoMdTime } from "react-icons/io";
 import GoogleDirectionsMap from "@/components/GoogleDirectionsMap";
 
 function formatDate(dt) {
@@ -89,9 +91,9 @@ export default function RideDetails() {
     ride.status === "scheduled"
       ? "bg-green-100 text-green-700"
       : ride.status === "completed"
+      ? "bg-blue-100 text-blue-700"
+      : ride.status === "cancelled"
       ? "bg-red-100 text-red-700"
-      : ride.status === "ongoing"
-      ? "bg-indigo-100 text-indigo-700"
       : "bg-gray-100 text-gray-700";
 
   const dateStr = ride.date
@@ -114,9 +116,36 @@ export default function RideDetails() {
     ride.createdBy?.email !== email &&
     !(ride.passengers || []).some((p) => p.email === email) &&
     !(ride.requests || []).some((r) => r.email === email) &&
-    ["scheduled", "ongoing"].includes(ride.status) &&
+    ride.status === "scheduled" &&
     hasSeats
   );
+
+  const isOwner = Boolean(email && ride.createdBy?.email === email);
+
+  async function updateStatus(next) {
+    try {
+      setReqError("");
+      setReqSuccess("");
+      setReqLoading(true);
+      const res = await fetch(`/api/rides/${rideId}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: next }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Failed to update status");
+      setReqSuccess(`Ride marked as ${next}`);
+      const fresh = await fetch(`/api/rides/${rideId}`, { cache: "no-store" });
+      if (fresh.ok) {
+        const d = await fresh.json();
+        setRide({ ...d, date: d?.date ? new Date(d.date) : null });
+      }
+    } catch (e) {
+      setReqError(e.message || "Failed to update status");
+    } finally {
+      setReqLoading(false);
+    }
+  }
 
   async function sendRequest() {
     try {
@@ -159,47 +188,57 @@ export default function RideDetails() {
                 height={300}
               />
             </div>
-            <div className="md:col-span-3">
+
+            <div className="h-full md:col-span-3 felx flex-col justify-between">
+              
               <div className="flex items-start justify-between gap-4">
-
-                <div className="w-2/3">
-                  <h2 className="text-lg font-medium">Route</h2>
                   <div className="mt-3 space-y-2 text-sm">
-                    <div>
-                      <span className="font-semibold">From:</span>{" "}
-                      <span>{ride.source?.address}</span>
+                    <h2 className="text-lg font-medium mb-3">Route</h2>
+                    <div className="flex flex-col">
+                      <span className="font-semibold uppercase text-gray-500">From:</span>
+                      <span className="pl-2">{ride.source?.address}</span>
                     </div>
-                    <div className="text-xs text-gray-500">
-                      Lat: {ride.source?.lat}, Lng: {ride.source?.lng}
+                    <div className="text-xs text-gray-600 flex flex-col pl-2">
+                      <span>Lat: {ride.source?.lat}</span> 
+                      <span>Lng: {ride.source?.lng}</span>
                     </div>
-                    <div className="mt-2">
-                      <span className="font-semibold">To:</span>{" "}
-                      <span>{ride.destination?.address}</span>
+                    <div className="mt-2 flex flex-col">
+                      <span className="font-semibold uppercase text-gray-500">To:</span>
+                      <span className="pl-2">{ride.destination?.address}</span>
                     </div>
-                    <div className="text-xs text-gray-500">
-                      Lat: {ride.destination?.lat}, Lng: {ride.destination?.lng}
+                    <div className="text-xs text-gray-600 flex flex-col pl-2">
+                      <span>Lat: {ride.destination?.lat}</span> 
+                      <span>Lng: {ride.destination?.lng}</span>
                     </div>
                   </div>
-                </div>
+                  <div className="h-full flex flex-col items-end justify-start">
+                    <div className="text-sm mt-1">
+                      <span className={`inline-block rounded-full px-2 py-0.5 text-xs capitalize ${statusStyle}`}>
+                        {ride.status}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center text-xs mt-5 uppercase font-semibold bg-[#dee2e6] rounded-lg p-4 border border-gray-300">
+                      <img src={`/${ride.vehicleType}.png`} alt={ride.vehicleType} className="h-8 w-8 object-contain" />
+                      {ride.vehicleType}
+                    </div>
+                  </div>
+              </div>
 
-                <div className="text-left w-1/3">
-                  <div className="text-sm">
-                    <span className="font-semibold">Date:</span> {dateStr}
+              <div className="font-medium flex items-center justify-center gap-20 p-5">
+                  <div className="flex items-center gap-3 p-3">
+                      <CiCalendar size={20} className="stroke-[1px]"/>
+                      <div>
+                          <div className="text-xs font-medium text-gray-500">Date</div>
+                          <div className="text-sm font-semibold text-gray-900">{dateStr}</div>
+                      </div>
                   </div>
-                  <div className="text-sm mt-1">
-                    <span className="font-semibold">Time:</span> {timeStr}
+                  <div className="flex items-center gap-3 p-3">
+                      <IoMdTime size={20} className="stroke-[5px]"/>  
+                      <div>
+                          <div className="text-xs font-medium text-gray-500">Time</div>
+                          <div className="text-sm font-semibold text-gray-900">{timeStr}</div> 
+                      </div>  
                   </div>
-                  <div className="text-sm mt-1">
-                    <span className="font-semibold">Vehicle:</span>{" "}
-                    {ride.vehicleType}
-                  </div>
-                  <div className="text-sm mt-1">
-                    <span className="font-semibold">Status:</span>{" "}
-                    <span className={`inline-block rounded-full px-2 py-0.5 text-xs capitalize ${statusStyle}`}>
-                      {ride.status}
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -270,10 +309,31 @@ export default function RideDetails() {
             </ul>
           </div>
 
-          {/* Join button */}
+          {/* Owner actions or Join button */}
           <div className="mt-5">
             {session ? (
-              canRequest ? (
+              isOwner ? (
+                ride.status === "scheduled" ? (
+                  <div className="flex items-center gap-3">
+                    <button
+                      disabled={reqLoading}
+                      onClick={() => updateStatus("completed")}
+                      className="rounded px-4 py-2 text-white disabled:opacity-50 bg-blue-600 hover:bg-blue-700"
+                    >
+                      {reqLoading ? "Updating..." : "Mark as Completed"}
+                    </button>
+                    <button
+                      disabled={reqLoading}
+                      onClick={() => updateStatus("cancelled")}
+                      className="rounded px-4 py-2 text-white disabled:opacity-50 bg-red-600 hover:bg-red-700"
+                    >
+                      {reqLoading ? "Updating..." : "Cancel Ride"}
+                    </button>
+                  </div>
+                ) : (
+                  <span className="text-xs text-gray-500">Status updates only available while scheduled.</span>
+                )
+              ) : canRequest ? (
                 <button
                   disabled={reqLoading}
                   onClick={sendRequest}
