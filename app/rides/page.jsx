@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { IoIosArrowForward } from "react-icons/io";
 import GoogleDirectionsMap from "../../components/GoogleDirectionsMap";
 import RideItem from "@components/RideItem";
 
@@ -147,149 +148,172 @@ export default function BrowseRidesPage() {
 	}, [queryString]);
 
 	return (
-		<div className="mx-auto max-w-screen px-4 py-8 bg-gray-50">
-			<h1 className="ml-6 text-2xl font-semibold tracking-tight">Browse Rides</h1>
-			<p className="ml-6 mb-2 text-sm text-gray-600">Fill in pickup, dropoff, schedule, and pricing details.</p>
+		<div className="mx-auto max-w-screen px-4 py-8 pb-24 bg-gray-50">
+			
+			<div className="flex items-center justify-between">
+				<div className="flex flex-col">
+					<h1 className="ml-6 text-2xl font-semibold tracking-tight">Browse Rides</h1>
+					<p className="ml-6 mb-2 text-sm text-gray-600">Fill in pickup, dropoff, schedule, and pricing details.</p>
+				</div>
+				<button
+					aria-expanded={openFilterPanel}
+					aria-controls="filters-panel"
+					onClick={() => setOpenFilterPanel((prev) => !prev)}
+					className="bg-[#212529] flex items-center justify-center gap-2 text-[#dee2e6] hover:bg-[#343a40] mr-10 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+				>
+					Apply Filters
+					<span className={`transition-transform duration-300 ${openFilterPanel ? "rotate-90" : "rotate-0"}`}>
+						<IoIosArrowForward />
+					</span>
+				</button>
+			</div>
+			
+			{/* Animated filter panel container */}
+			<div
+				id="filters-panel"
+				className={`transition-[max-height,opacity,transform] duration-300 ease-in-out overflow-hidden ${openFilterPanel ? "max-h-[1000px] opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-2"}`}
+				aria-hidden={!openFilterPanel}
+			>
+				<div className="mb-6 mx-4 rounded-lg border border-neutral-300 bg-white p-4 shadow-sm">
+					<div className="flex flex-row item-center justify-around">
+						{/* Location Filters */}
+						<div className="w-1/2 grid grid-cols-1 gap-4 md:grid-cols-2">
+							{/* Source */}
+							<div className="flex flex-col p-2 border border-gray-200 rounded">
+								<div className="flex flex-col">
+									<label className="block text-xs font-medium text-gray-700">Source</label>
+									<input
+										name="sourceAddress"
+										value={filters.sourceAddress}
+										onChange={onChange}
+										onBlur={() => geocode("source")}
+										className="mt-1 mx-2 w-45 h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
+										placeholder="Pickup address"
+									/>
 
-			<div className="mb-6 mx-4 rounded-lg border border-neutral-300 bg-white p-4 shadow-sm">
-				<div className="flex flex-row item-center justify-around">
-					{/* Location Filters */}
-					<div className="w-1/2 grid grid-cols-1 gap-4 md:grid-cols-2">
-						{/* Source */}
-						<div className="flex flex-col p-2 border border-gray-200 rounded">
-							<div className="flex flex-col">
-								<label className="block text-xs font-medium text-gray-700">Source</label>
-								<input
-									name="sourceAddress"
-									value={filters.sourceAddress}
-									onChange={onChange}
-									onBlur={() => geocode("source")}
-									className="mt-1 mx-2 w-45 h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
-									placeholder="Pickup address"
-								/>
+									{geoLoading.source && (
+										<span className="text-xs text-gray-500 ml-2">Filling...</span>
+									)}
+									{geoError.source && (
+										<span className="text-xs text-red-500 ml-2">{geoError.source}</span>
+									)}
+									{!geoError.source && !geoLoading.source && (
+										<span className="text-xs text-gray-500">&nbsp;</span>
+									)}
 
-								{geoLoading.source && (
-									<span className="text-xs text-gray-500 ml-2">Filling...</span>
-								)}
-								{geoError.source && (
-									<span className="text-xs text-red-500 ml-2">{geoError.source}</span>
-								)}
-								{!geoError.source && !geoLoading.source && (
-									<span className="text-xs text-gray-500">&nbsp;</span>
-								)}
+									<div className="flex flex-row gap-2 items-center">
+										<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lat">Lat: {filters.sourceLat ? filters.sourceLat : "XX"}</div>
+										<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lng">Lng: {filters.sourceLng ? filters.sourceLng : "XX"}</div>
+									</div>
+								</div>
+							</div>
 
-								<div className="flex flex-row gap-2 items-center">
-									<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lat">Lat: {filters.sourceLat ? filters.sourceLat : "XX"}</div>
-									<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lng">Lng: {filters.sourceLng ? filters.sourceLng : "XX"}</div>
+							{/* Destination */}
+							<div className="flex flex-col p-2 border border-gray-200 rounded">
+								<div className="flex flex-col">
+									<label className="block text-xs font-medium text-gray-700">Destination</label>
+									<input
+										name="destinationAddress"
+										value={filters.destinationAddress}
+										onChange={onChange}
+										onBlur={() => geocode("destination")}
+										className="mt-1 mx-2 w-45 h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
+										placeholder="Dropoff address"
+									/>
+
+									{geoLoading.destination && (
+										<span className="text-xs text-gray-500 ml-2">Filling...</span>
+									)}
+									{geoError.destination && (
+										<span className="text-xs text-red-500 ml-2">{geoError.destination}</span>
+									)}
+									{!geoError.destination && !geoLoading.destination && (
+										<span className="text-xs text-gray-500 ml-2">&nbsp;</span>
+									)}
+
+									<div className="flex flex-row gap-2 items-center">
+										<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lat">Lat: {filters.destLat ? filters.destLat : "XX"}</div>
+										<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lng">Lng: {filters.destLng ? filters.destLng : "XX"}</div>
+									</div>
 								</div>
 							</div>
 						</div>
 
-						{/* Destination */}
-						<div className="flex flex-col p-2 border border-gray-200 rounded">
-							<div className="flex flex-col">
-								<label className="block text-xs font-medium text-gray-700">Destination</label>
-								<input
-									name="destinationAddress"
-									value={filters.destinationAddress}
-									onChange={onChange}
-									onBlur={() => geocode("destination")}
-									className="mt-1 mx-2 w-45 h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
-									placeholder="Dropoff address"
-								/>
 
-								{geoLoading.destination && (
-									<span className="text-xs text-gray-500 ml-2">Filling...</span>
-								)}
-								{geoError.destination && (
-									<span className="text-xs text-red-500 ml-2">{geoError.destination}</span>
-								)}
-								{!geoError.destination && !geoLoading.destination && (
-									<span className="text-xs text-gray-500 ml-2">&nbsp;</span>
-								)}
+						{/* Other Filters */}
+						<div className="w-1/2 flex items-center justify-center">
 
-								<div className="flex flex-row gap-2 items-center">
-									<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lat">Lat: {filters.destLat ? filters.destLat : "XX"}</div>
-									<div disabled className="px-2 text-xs text-neutral-400" placeholder="Lng">Lng: {filters.destLng ? filters.destLng : "XX"}</div>
+							<div className="h-full w-full flex flex-row justify-around items-center">
+								<div className="flex flex-col gap-2 items-left">
+									<div>
+										<label className="block text-xs font-medium text-gray-700">Date</label>
+										<input name="date" type="date" value={filters.date} onChange={onChange} className="mt-1 w-full h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+									</div>
+									<div className="w-1/2 flex flex-col items-left">
+										<label className="block text-xs font-medium text-gray-700">Vehicle Type</label>
+										<select name="vehicleType" value={filters.vehicleType} onChange={onChange} className="mt-1 h-8 w-40 border border-gray-300 rounded px-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black">
+											<option value="">Any</option>
+											{vehicleTypes.map((t) => (
+												<option key={t} value={t}>
+													{t}
+												</option>
+											))}
+										</select>
+									</div>
 								</div>
-							</div>
-						</div>
-					</div>
-
-
-					{/* Other Filters */}
-					<div className="w-1/2 flex items-center justify-center">
-
-						<div className="h-full w-full flex flex-row justify-around items-center">
-							<div className="flex flex-col gap-2 items-left">
-								<div>
-									<label className="block text-xs font-medium text-gray-700">Date</label>
-									<input name="date" type="date" value={filters.date} onChange={onChange} className="mt-1 w-full h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+								<div className="flex flex-col gap-2 items-center justify-center">
+									<div>
+										<label className="block text-xs font-medium text-gray-700">Min Seats</label>
+										<input name="minSeats" type="number" min="1" value={filters.minSeats} placeholder="Enter count" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+									</div>
+									<div>
+										<label className="block text-xs font-medium text-gray-700">Max Price</label>
+										<input name="maxPrice" type="number" min="0" step="any" value={filters.maxPrice} placeholder="Enter price" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+									</div>
 								</div>
-								<div className="w-1/2 flex flex-col items-left">
-									<label className="block text-xs font-medium text-gray-700">Vehicle Type</label>
-									<select name="vehicleType" value={filters.vehicleType} onChange={onChange} className="mt-1 h-8 w-40 border border-gray-300 rounded px-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black">
-										<option value="">Any</option>
-										{vehicleTypes.map((t) => (
-											<option key={t} value={t}>
-												{t}
-											</option>
-										))}
-									</select>
+								
+								{/* Action Buttons */}
+								<div className="mt-auto flex flex-col justify-end items-end gap-2">
+									<button
+										onClick={() => {
+											setFilters({
+												sourceAddress: "",
+												sourceLat: "",
+												sourceLng: "",
+												sourceRadiusKm: 10,
+												destinationAddress: "",
+												destLat: "",
+												destLng: "",
+												destRadiusKm: 10,
+												date: "",
+												vehicleType: "",
+												minSeats: "",
+												maxPrice: "",
+											});
+											// Clear any address-related geocode errors on reset
+											setGeoError({ source: "", destination: "" });
+											setPage(1);
+											setAppliedFilters({
+												sourceAddress: "",
+												sourceLat: "",
+												sourceLng: "",
+												sourceRadiusKm: 10,
+												destinationAddress: "",
+												destLat: "",
+												destLng: "",
+												destRadiusKm: 10,
+												date: "",
+												vehicleType: "",
+												minSeats: "",
+												maxPrice: "",
+											});
+										}}
+										className="w-20 h-8 rounded border border-gray-300 hover:border-gray-400 hover:bg-gray-300 rounded px-4 py-1"
+									>
+										Reset
+									</button>
+									<button onClick={() => { setPage(1); setAppliedFilters(filters); }} className="w-20 h-8 rounded bg-[#212529] hover:bg-[#343a40] px-4 py-1 text-white">Apply</button>
 								</div>
-							</div>
-							<div className="flex flex-col gap-2 items-center justify-center">
-								<div>
-									<label className="block text-xs font-medium text-gray-700">Min Seats</label>
-									<input name="minSeats" type="number" min="1" value={filters.minSeats} placeholder="Enter count" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
-								</div>
-								<div>
-									<label className="block text-xs font-medium text-gray-700">Max Price</label>
-									<input name="maxPrice" type="number" min="0" step="any" value={filters.maxPrice} placeholder="Enter price" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
-								</div>
-							</div>
-							
-							{/* Action Buttons */}
-							<div className="mt-auto flex flex-col justify-end items-end gap-2">
-								<button
-									onClick={() => {
-										setFilters({
-											sourceAddress: "",
-											sourceLat: "",
-											sourceLng: "",
-											sourceRadiusKm: 10,
-											destinationAddress: "",
-											destLat: "",
-											destLng: "",
-											destRadiusKm: 10,
-											date: "",
-											vehicleType: "",
-											minSeats: "",
-											maxPrice: "",
-										});
-										// Clear any address-related geocode errors on reset
-										setGeoError({ source: "", destination: "" });
-										setPage(1);
-										setAppliedFilters({
-											sourceAddress: "",
-											sourceLat: "",
-											sourceLng: "",
-											sourceRadiusKm: 10,
-											destinationAddress: "",
-											destLat: "",
-											destLng: "",
-											destRadiusKm: 10,
-											date: "",
-											vehicleType: "",
-											minSeats: "",
-											maxPrice: "",
-										});
-									}}
-									className="w-20 h-8 rounded border border-gray-300 hover:border-gray-400 hover:bg-gray-300 rounded px-4 py-1"
-								>
-									Reset
-								</button>
-								<button onClick={() => { setPage(1); setAppliedFilters(filters); }} className="w-20 h-8 rounded bg-[#984764] hover:bg-[#BD5A7C] px-4 py-1 text-white">Search</button>
 							</div>
 						</div>
 					</div>
@@ -313,7 +337,7 @@ export default function BrowseRidesPage() {
 					/>)}
 					
 				</div>
-				<div className="w-[55%] px-4 overflow-y-auto max-h-[600px]">
+				<div className="w-[55%] px-4 max-h-[600px] overflow-y-auto">
 					{loading ? (
 						<div className="py-10 text-center text-gray-500">Loading rides...</div>
 					) : error ? (
@@ -338,38 +362,36 @@ export default function BrowseRidesPage() {
 							})}
 						</div>
 					)}
+				</div>
+			</div>
+			<div className="w-auto fixed inset-x-0 bottom-0 z-40 bg-white py-5 flex items-center justify-center gap-4">
+				<button
+					aria-label="Previous page"
+					disabled={page === 1}
+					onClick={() => setPage((p) => Math.max(1, p - 1))}
+					className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white shadow-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+					</svg>
+				</button>
 
-					<div className="mt-6 flex items-center justify-center gap-4">
-						<button
-							aria-label="Previous page"
-							disabled={page === 1}
-							onClick={() => setPage((p) => Math.max(1, p - 1))}
-							className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white shadow-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-							</svg>
-						</button>
-
-						<div className="min-w-[4rem] h-10 px-4 flex items-center justify-center rounded-lg border border-gray-300 bg-white shadow-sm">
-							<span className="text-sm font-semibold tracking-wide">
-								{totalPages > 0 ? `Page ${page} of ${totalPages}` : `Page ${page}`}
-							</span>
-						</div>
-
-						<button
-							aria-label="Next page"
-							disabled={totalPages === 0 || page >= totalPages}
-							onClick={() => setPage((p) => p + 1)}
-							className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white shadow-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-						>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-							</svg>
-						</button>
-					</div>
+				<div className="min-w-[4rem] h-10 px-4 flex items-center justify-center rounded-lg border border-gray-300 bg-white shadow-sm">
+					<span className="text-sm font-semibold tracking-wide">
+						{totalPages > 0 ? `Page ${page} of ${totalPages}` : `Page ${page}`}
+					</span>
 				</div>
 
+				<button
+					aria-label="Next page"
+					disabled={totalPages === 0 || page >= totalPages}
+					onClick={() => setPage((p) => p + 1)}
+					className="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 bg-white shadow-sm hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="w-5 h-5">
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+					</svg>
+				</button>
 			</div>
 		</div>
 	);
