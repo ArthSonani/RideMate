@@ -136,56 +136,6 @@ export default function Dashboard() {
                     <RideItem
                       key={r.id}
                       ride={r}
-                      actions={
-                        r.requests?.length ? (
-                          <div className="mt-3">
-                            <div className="text-sm font-medium">Incoming Requests</div>
-                            <ul className="mt-2 space-y-2">
-                              {r.requests.map((rq) => (
-                                <li key={rq.userId} className="flex items-center justify-between">
-                                  <div className="flex items-center gap-3">
-                                    <img src={rq.avatar || "/user.png"} alt="" className="h-8 w-8 rounded-full" />
-                                    <div>
-                                      <div className="text-sm font-medium">{rq.name}</div>
-                                      <div className="text-xs text-gray-500">{rq.email}</div>
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <button
-                                      className="rounded bg-green-600 px-3 py-1.5 text-white text-xs"
-                                      onClick={async () => {
-                                        await fetch(`/api/rides/${r.id}/requests/accept`, {
-                                          method: "POST",
-                                          headers: { "Content-Type": "application/json" },
-                                          body: JSON.stringify({ userId: rq.userId }),
-                                        });
-                                        await refresh();
-                                      }}
-                                    >
-                                      Accept
-                                    </button>
-                                    <button
-                                      className="rounded bg-red-600 px-3 py-1.5 text-white text-xs"
-                                      onClick={async () => {
-                                        await fetch(`/api/rides/${r.id}/requests/reject`, {
-                                          method: "POST",
-                                          headers: { "Content-Type": "application/json" },
-                                          body: JSON.stringify({ userId: rq.userId }),
-                                        });
-                                        await refresh();
-                                      }}
-                                    >
-                                      Reject
-                                    </button>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ) : (
-                          <div className="text-xs text-gray-500 mt-3">No incoming requests</div>
-                        )
-                      }
                     />
                   ))}
                 </ul>

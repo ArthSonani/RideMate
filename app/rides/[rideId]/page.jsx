@@ -147,6 +147,56 @@ export default function RideDetails() {
     }
   }
 
+  async function acceptRequest(userId) {
+    try {
+      setReqError("");
+      setReqSuccess("");
+      setReqLoading(true);
+      const res = await fetch(`/api/rides/${rideId}/requests/accept`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Failed to accept request");
+      setReqSuccess("Request accepted");
+      const fresh = await fetch(`/api/rides/${rideId}`, { cache: "no-store" });
+      if (fresh.ok) {
+        const d = await fresh.json();
+        setRide({ ...d, date: d?.date ? new Date(d.date) : null });
+      }
+    } catch (e) {
+      setReqError(e.message || "Failed to accept request");
+    } finally {
+      setReqLoading(false);
+    }
+  }
+
+  async function rejectRequest(userId) {
+    try {
+      setReqError("");
+      setReqSuccess("");
+      setReqLoading(true);
+      const res = await fetch(`/api/rides/${rideId}/requests/reject`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || "Failed to reject request");
+      setReqSuccess("Request rejected");
+      const fresh = await fetch(`/api/rides/${rideId}`, { cache: "no-store" });
+      if (fresh.ok) {
+        const d = await fresh.json();
+        setRide({ ...d, date: d?.date ? new Date(d.date) : null });
+      }
+    } catch (e) {
+      setReqError(e.message || "Failed to reject request");
+    } finally {
+      setReqLoading(false);
+    }
+  }
+
   async function sendRequest() {
     try {
       setReqError("");
@@ -360,9 +410,31 @@ export default function RideDetails() {
                 <li key={idx} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <img src={r.avatar || "/ridemate2.png"} alt="" className="h-7 w-7 rounded-full" />
-                    <span className="font-medium">{r.name}</span>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{r.name}</span>
+                      <span className="text-gray-500">{r.email}</span>
+                    </div>
                   </div>
-                  <span className="text-gray-500">{r.email}</span>
+                  {isOwner ? (
+                    <div className="flex items-center gap-2">
+                      <button
+                        disabled={reqLoading}
+                        onClick={() => acceptRequest(r.userId)}
+                        className="rounded px-3 py-1 text-xs text-white disabled:opacity-50 bg-blue-600 hover:bg-blue-700"
+                      >
+                        {reqLoading ? "Accepting..." : "Accept"}
+                      </button>
+                      <button
+                        disabled={reqLoading}
+                        onClick={() => rejectRequest(r.userId)}
+                        className="rounded px-3 py-1 text-xs text-white disabled:opacity-50 bg-red-600 hover:bg-red-700"
+                      >
+                        {reqLoading ? "Rejecting..." : "Reject"}
+                      </button>
+                    </div>
+                  ) : (
+                    <span className="text-xs text-gray-400">Owner will review your request.</span>
+                  )}
                 </li>
               ))}
             </ul>

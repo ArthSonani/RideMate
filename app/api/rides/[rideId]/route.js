@@ -49,6 +49,7 @@ export async function GET(_req, context) {
 
 			requests: Array.isArray(ride.requests)
 				? ride.requests.map((rq) => ({
+					userId: rq?.user?._id?.toString?.() || null,
 					name: rq?.user?.name || "Unknown User",
 					email: rq?.user?.email || "",
 					avatar: rq?.user?.avatar || null,

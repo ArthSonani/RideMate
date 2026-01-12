@@ -24,8 +24,13 @@ export async function POST(req, context) {
 
     await connectToDB();
 
-    const ride = await Ride.findById(rideId);
+    const ride = await Ride.findById(rideId).populate({ path: "createdBy", select: "email" });
     if (!ride) return NextResponse.json({ message: "Ride not found" }, { status: 404 });
+
+    // Only owner may accept requests
+    if (ride.createdBy?.email !== session.user.email) {
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
 
     // Ensure seats available
     if (ride.availableSeats <= 0) {

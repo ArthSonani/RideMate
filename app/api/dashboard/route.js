@@ -46,13 +46,7 @@ export async function GET() {
       availableSeats: r.availableSeats,
       pricePerSeat: r.pricePerSeat,
       status: r.status,
-      requests: (r.requests || []).map((rq) => ({
-        userId: rq.user?._id?.toString() || null,
-        name: rq.user?.name || "Unknown",
-        email: rq.user?.email || "",
-        avatar: rq.user?.avatar || null,
-        requestedAt: rq.requestedAt,
-      })),
+      requestsCount: Array.isArray(r.requests) ? r.requests.length : 0,
     }));
 
     const joinedMapped = joinedActiveRides.map((r) => ({
@@ -65,14 +59,6 @@ export async function GET() {
       availableSeats: r.availableSeats,
       pricePerSeat: r.pricePerSeat,
       status: r.status,
-      driver: r.createdBy
-        ? {
-            id: r.createdBy._id.toString(),
-            name: r.createdBy.name,
-            email: r.createdBy.email,
-            avatar: r.createdBy.avatar || null,
-          }
-        : null,
     }));
 
     const response = {

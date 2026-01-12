@@ -3,7 +3,7 @@ import { CiCalendar } from "react-icons/ci";
 import { IoMdTime } from "react-icons/io";
 
 
-function RideItem({ ride, actions }) {
+function RideItem({ ride }) {
   const rideDateObj = ride?.date ? new Date(ride.date) : null;
   const rideDateStr = rideDateObj
     ? rideDateObj.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
@@ -59,7 +59,9 @@ function RideItem({ ride, actions }) {
                         </div>
                     </div>
                 </div>
-                <div className="text-xs text-gray-500">Seats: {ride?.availableSeats ?? "-"}/{ride?.totalSeats ?? "-"}</div>
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span>Seats: {ride?.availableSeats ?? "-"}/{ride?.totalSeats ?? "-"}</span>
+                </div>
             </div>
 
             <div className="lg:w-[20%] hidden sm:flex flex-col items-end justify-start sm:w-[12%]">
@@ -72,7 +74,12 @@ function RideItem({ ride, actions }) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                 </Link>
-                {actions}
+                <div className="mt-auto">
+                    {ride.requestsCount > 0? 
+                        <span className="ml-3 text-[11px] text-yellow-600">{ride.requestsCount} incoming requests</span>:
+                        <span className="ml-3 text-[11px] text-gray-600">No incoming requests</span>
+                    }
+                </div>
             </div>
         </div>
     )

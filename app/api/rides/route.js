@@ -174,6 +174,7 @@ export async function GET(req) {
       availableSeats: ride.availableSeats,
       pricePerSeat: ride.pricePerSeat,
       status: ride.status,
+      requestsCount: Array.isArray(ride.requests) ? ride.requests.length : 0,
     }));
 
     return NextResponse.json({
