@@ -5,6 +5,9 @@ import Nav from '@components/Nav'
 export const metadata = {
   title: 'RideMate',
   description: 'Your Ultimate Ride Sharing Companion',
+  icons: {
+    icon: '/logo.png',
+  },
 }
 
 
