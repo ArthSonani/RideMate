@@ -4,8 +4,8 @@ import Image from 'next/image'
 const Home = () => {
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <section className="flex flex-center relative pt-6 pb-6 sm:pt-32 sm:pb-40 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.15)_1px,transparent_1px)] [background-size:45px_45px]">
+    <div className="min-h-screen bg-gradient-to-br from-[#6c757d] to-[#e9ecef]">
+      <section className="flex flex-center relative pt-6 pb-6 sm:pt-32 sm:pb-40 bg-[linear-gradient(to_right,rgba(0,0,0,0.15)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.15)_1px,transparent_1px)] [background-size:60px_60px]">
         <div className="flex justify-center items-center w-auto px-2 sm:px-2 lg:px-20">
           <div className="text-left">
             <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
@@ -13,24 +13,24 @@ const Home = () => {
               <span className="block my-2">Split the Cost.</span>
               <span className="block my-2">Travel Smarter.</span>
             </h1>
-            <p className="mt-3 max-w-md text-base text-gray-500 sm:text-lg md:mt-5 md:text-lg md:max-w-xl">
+            <p className="mt-3 max-w-md text-base text-[#495057] sm:text-lg md:mt-5 md:text-lg md:max-w-xl">
               Connect with people who are heading in the same direction as you,
               Split travel costs, reduce fuel consumption,
               and turn ordinary rides into smarter, shared journeys.
             </p>
             <div className="mt-5 max-w-md sm:flex sm:justify-center md:mt-8">
               <div className="rounded-md shadow">
-                <Link href="/rides" className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-black bg-[#ffc312] hover:bg-[#BD5A7C] md:py-4 md:text-lg md:px-10 transition-colors">
+                <Link href="/rides" className="group w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-[#ced4da] bg-[#212529] hover:bg-[#343a40] md:py-4 md:text-lg md:px-10 transition-colors">
                   Find a Ride
-                  <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="ml-2 h-5 w-5 transition-all duration-150 ease-out transform group-hover:translate-x-1 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
               </div>
               <div className="mt-3 rounded-md sm:mt-0 sm:ml-3">
-                <Link href="/rides/create" className="w-full flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-gray-800 bg-[#F0E5E9] hover:shadow hover:text-gray-600 md:py-4 md:text-lg md:px-10 transition-colors">
+                <Link href="/rides/create" className="group w-full flex items-center justify-center px-8 py-3 text-base font-medium rounded-md text-gray-800 bg-[#ced4da] hover:shadow hover:bg-[#dee2e6] md:py-4 md:text-lg md:px-10 transition-colors">
                   Offer a Ride
-                  <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="ml-2 h-5 w-5 transition-all duration-150 ease-out transform group-hover:translate-x-1 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
                 </Link>
@@ -51,10 +51,10 @@ const Home = () => {
   
       </section>
 
-      <section className="py-16 bg-[#FFF9C4]">
+      <section className="py-16 bg-[#f8f9fa]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="lg:text-center">
-            <h2 className="text-base text-[#984764] font-semibold tracking-wide uppercase">Features</h2>
+            <h2 className="text-base text-[#6c757d] font-semibold tracking-wide uppercase">Features</h2>
             <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
               Everything you need for ride sharing
             </p>
@@ -129,18 +129,18 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="bg-[#ffc312]">
+      <section className="bg-[#343a40]">
         <div className="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-            <span className="block text-black">Ready to start sharing rides?</span>
+            <span className="block text-[black]">Ready to start sharing rides?</span>
             <span className="block text-black">Join RideMate today.</span>
           </h2>
-          <p className="mt-4 text-lg leading-6 text-gray-500">
+          <p className="mt-4 text-lg leading-6 text-[#ced4da]">
             Create your account and start connecting with riders in your area.
           </p>
-          <Link href="/register" className="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-neutral-300 sm:w-auto transition-colors">
+          <Link href="/register" className="group mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-black bg-[#adb5bd] hover:bg-[#ced4da] sm:w-auto transition-colors">
             Get Started Free
-            <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="ml-2 h-5 w-5 transition-all duration-150 ease-out transform group-hover:translate-x-1 group-hover:scale-110" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </Link>
