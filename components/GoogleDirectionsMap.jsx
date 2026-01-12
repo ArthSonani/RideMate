@@ -32,6 +32,13 @@ export default function GoogleDirectionsMap({
   const hasAddresses = Boolean(origin && destination);
 
   useEffect(() => {
+    // If the Google Maps script is already present (due to prior navigation), mark as loaded.
+    if (typeof window !== "undefined" && window.google && window.google.maps) {
+      setGmapsLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (!gmapsLoaded || !hasAddresses || !mapRef.current) return;
     const g = window.google;
     if (!g?.maps) return;
@@ -115,7 +122,7 @@ export default function GoogleDirectionsMap({
       />
       <Script
         src={`https://maps.googleapis.com/maps/api/js?key=${apiKey}`}
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         onLoad={() => setGmapsLoaded(true)}
       />
     </>

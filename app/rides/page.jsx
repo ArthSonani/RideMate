@@ -40,8 +40,8 @@ export default function BrowseRidesPage() {
 		minSeats: "",
 		maxPrice: "",
 	});
+	const [openFilterPanel, setOpenFilterPanel] = useState(false);
 	const [selectedRide, setSelectedRide] = useState(null);
-	console.log(selectedRide)
 	const [total, setTotal] = useState(0);
 	const [limit, setLimit] = useState(5);
 	const [loading, setLoading] = useState(true);
