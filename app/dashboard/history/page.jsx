@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import RideItem from "@/components/RideItem";
+import RideCard from "@components/RideCard";
 
 const HistoryPage = () => {
   const [data, setData] = useState({ rides: [], loading: true, error: null });
@@ -35,7 +35,7 @@ const HistoryPage = () => {
         <ul className="space-y-3">
           {data.rides.map((ride) => (
             <li key={ride.id} className="list-none">
-              <RideItem ride={ride} />
+              <RideCard ride={ride} />
             </li>
           ))}
         </ul>

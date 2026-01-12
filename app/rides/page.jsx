@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import GoogleDirectionsMap from "../../components/GoogleDirectionsMap";
-import RideItem from "@components/RideItem";
+import RideCard from "@components/RideCard";
 
 const vehicleTypes = ["auto", "bike", "economy", "sedan", "xl", "premier"];
 
@@ -361,7 +361,7 @@ export default function BrowseRidesPage() {
 										role="button"
 										aria-selected={isSelected}
 									>
-										<RideItem ride={r} />
+										<RideCard ride={r} />
 									</div>
 								);
 							})}

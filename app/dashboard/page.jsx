@@ -4,7 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import RideItem from "../../components/RideItem";
+import RideCard from "../../components/RideCard";
 
 function Stat({ label, value }) {
   return (
@@ -133,7 +133,7 @@ export default function Dashboard() {
               ) : (
                 <ul className="mt-3 space-y-3 flex flex-col gap-2">
                   {createdRides.map((r) => (
-                    <RideItem
+                    <RideCard
                       key={r.id}
                       ride={r}
                     />
@@ -150,7 +150,7 @@ export default function Dashboard() {
               ) : (
                 <ul className="mt-3 space-y-3">
                   {joinedRides.map((r) => (
-                    <RideItem
+                    <RideCard
                       key={r.id}
                       ride={r}
                     />

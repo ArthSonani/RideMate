@@ -3,7 +3,7 @@ import { CiCalendar } from "react-icons/ci";
 import { IoMdTime } from "react-icons/io";
 
 
-function RideItem({ ride }) {
+function RideCard({ ride }) {
   const rideDateObj = ride?.date ? new Date(ride.date) : null;
   const rideDateStr = rideDateObj
     ? rideDateObj.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
@@ -93,4 +93,4 @@ function RideItem({ ride }) {
     )
 }
 
-export default RideItem;
+export default RideCard;
