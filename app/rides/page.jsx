@@ -21,6 +21,7 @@ export default function BrowseRidesPage() {
 		vehicleType: "",
 		minSeats: "",
 		maxPrice: "",
+		status: "scheduled",
 	});
 
 	const [rides, setRides] = useState([]);
@@ -40,6 +41,7 @@ export default function BrowseRidesPage() {
 		vehicleType: "",
 		minSeats: "",
 		maxPrice: "",
+		status: "scheduled",
 	});
 	const [openFilterPanel, setOpenFilterPanel] = useState(false);
 	const [selectedRide, setSelectedRide] = useState(null);
@@ -116,6 +118,7 @@ export default function BrowseRidesPage() {
 		if (appliedFilters.vehicleType) params.set("vehicleType", appliedFilters.vehicleType);
 		if (appliedFilters.minSeats) params.set("minSeats", appliedFilters.minSeats);
 		if (appliedFilters.maxPrice) params.set("maxPrice", appliedFilters.maxPrice);
+		if (appliedFilters.status) params.set("status", appliedFilters.status);
 		params.set("page", String(page));
 		params.set("limit", "5");
 		return params.toString();
@@ -289,11 +292,12 @@ export default function BrowseRidesPage() {
 												vehicleType: "",
 												minSeats: "",
 												maxPrice: "",
+												status: "scheduled",
 											});
 											// Clear any address-related geocode errors on reset
 											setGeoError({ source: "", destination: "" });
 											setPage(1);
-											setAppliedFilters({
+										setAppliedFilters({
 												sourceAddress: "",
 												sourceLat: "",
 												sourceLng: "",
@@ -305,14 +309,15 @@ export default function BrowseRidesPage() {
 												date: "",
 												vehicleType: "",
 												minSeats: "",
-												maxPrice: "",
+											maxPrice: "",
+											status: "scheduled",
 											});
 										}}
 										className="w-20 h-8 rounded border border-gray-300 hover:border-gray-400 hover:bg-gray-300 rounded px-4 py-1"
 									>
 										Reset
 									</button>
-									<button onClick={() => { setPage(1); setAppliedFilters(filters); }} className="w-20 h-8 rounded bg-[#212529] hover:bg-[#343a40] px-4 py-1 text-white">Apply</button>
+								<button onClick={() => { setPage(1); setAppliedFilters(filters); }} className="w-20 h-8 rounded bg-[#212529] hover:bg-[#343a40] px-4 py-1 text-white">Apply</button>
 								</div>
 							</div>
 						</div>

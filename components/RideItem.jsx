@@ -8,6 +8,14 @@ function RideItem({ ride }) {
   const rideDateStr = rideDateObj
     ? rideDateObj.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
     : "Date TBD";
+  const statusStyle =
+    ride?.status === "scheduled"
+      ? "bg-green-100 text-green-700"
+      : ride?.status === "completed"
+      ? "bg-blue-100 text-blue-700"
+      : ride?.status === "cancelled"
+      ? "bg-red-100 text-red-700"
+      : "bg-gray-100 text-gray-700";
   const rideTimeStr = rideDateObj
     ? rideDateObj.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" })
     : "--:--";
@@ -65,7 +73,7 @@ function RideItem({ ride }) {
             </div>
 
             <div className="lg:w-[20%] hidden sm:flex flex-col items-end justify-start sm:w-[12%]">
-                <span className="inline-block rounded bg-green-100 px-2 py-0.5 text-xs capitalize text-green-700">
+                <span className={`inline-block rounded px-2 py-0.5 text-xs capitalize ${statusStyle}`}>
                     {ride?.status || "pending"}
                 </span>
                 <Link href={`/rides/${ride.id}`} className="group mt-3 block text-sm text-blue-600 hover:text-blue-800 flex item-center justify-center ">
