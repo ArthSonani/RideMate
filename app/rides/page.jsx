@@ -190,7 +190,7 @@ export default function BrowseRidesPage() {
 										value={filters.sourceAddress}
 										onChange={onChange}
 										onBlur={() => geocode("source")}
-										className="mt-1 mx-2 w-45 h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
+										className="mt-1 mx-2 w-45 h-8 border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
 										placeholder="Pickup address"
 									/>
 
@@ -220,7 +220,7 @@ export default function BrowseRidesPage() {
 										value={filters.destinationAddress}
 										onChange={onChange}
 										onBlur={() => geocode("destination")}
-										className="mt-1 mx-2 w-45 h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
+										className="mt-1 mx-2 w-45 h-8 border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
 										placeholder="Dropoff address"
 									/>
 
@@ -250,11 +250,11 @@ export default function BrowseRidesPage() {
 								<div className="flex flex-col gap-2 items-left">
 									<div>
 										<label className="block text-xs font-medium text-gray-700">Date</label>
-										<input name="date" type="date" value={filters.date} onChange={onChange} className="mt-1 w-full h-8 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+										<input name="date" type="date" value={filters.date} onChange={onChange} className="mt-1 w-full h-8 border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
 									</div>
 									<div className="w-1/2 flex flex-col items-left">
 										<label className="block text-xs font-medium text-gray-700">Vehicle Type</label>
-										<select name="vehicleType" value={filters.vehicleType} onChange={onChange} className="mt-1 h-8 w-40 border border-gray-300 rounded px-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black">
+										<select name="vehicleType" value={filters.vehicleType} onChange={onChange} className="mt-1 h-8 w-40 border border-gray-300 px-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black">
 											<option value="">Any</option>
 											{vehicleTypes.map((t) => (
 												<option key={t} value={t}>
@@ -267,11 +267,11 @@ export default function BrowseRidesPage() {
 								<div className="flex flex-col gap-2 items-center justify-center">
 									<div>
 										<label className="block text-xs font-medium text-gray-700">Min Seats</label>
-										<input name="minSeats" type="number" min="1" value={filters.minSeats} placeholder="Enter count" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+										<input name="minSeats" type="number" min="1" value={filters.minSeats} placeholder="Enter count" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
 									</div>
 									<div>
 										<label className="block text-xs font-medium text-gray-700">Max Price</label>
-										<input name="maxPrice" type="number" min="0" step="any" value={filters.maxPrice} placeholder="Enter price" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 rounded px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
+										<input name="maxPrice" type="number" min="0" step="any" value={filters.maxPrice} placeholder="Enter price" onChange={onChange} className="mt-1 h-8 w-25 border border-gray-300 px-3 py-2 rounded-md focus:outline-none focus:ring-1 focus:ring-black" />
 									</div>
 								</div>
 								
@@ -313,7 +313,7 @@ export default function BrowseRidesPage() {
 											status: "scheduled",
 											});
 										}}
-										className="w-20 h-8 rounded border border-gray-300 hover:border-gray-400 hover:bg-gray-300 rounded px-4 py-1"
+										className="w-20 h-8 border border-gray-300 hover:border-gray-400 hover:bg-gray-300 rounded px-4 py-1"
 									>
 										Reset
 									</button>
